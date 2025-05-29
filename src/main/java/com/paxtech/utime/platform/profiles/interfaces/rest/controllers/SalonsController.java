@@ -52,6 +52,22 @@ public class SalonsController {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @Operation(
+            summary = "Get a salon by ID",
+            description = "Retrieve a salon by its ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Salon found"),
+            @ApiResponse(responseCode = "404", description = "Salon not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<SalonResource> getSalonByIdPath(@PathVariable Long id) {
+        var result = salonsQueryService.handle(new GetSalonByIdQuery(id));
+        return result.map(salon -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(salon)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+
     @Operation(summary = "Get salons with filters", description = "Retrieve salon(s) by ID, email, or get all")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Salon(s) retrieved successfully"),
@@ -75,6 +91,8 @@ public class SalonsController {
             return getAllSalons();
         }
     }
+
+
 
     private ResponseEntity<SalonResource> getSalonById(Long id) {
         Optional<Salons> salon = salonsQueryService.handle(new GetSalonByIdQuery(id));
