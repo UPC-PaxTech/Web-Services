@@ -1,8 +1,6 @@
-package com.paxtech.utime.platform.news.domain.model.aggregates;
+package com.paxtech.utime.platform.profiles.domain.model.aggregates;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
