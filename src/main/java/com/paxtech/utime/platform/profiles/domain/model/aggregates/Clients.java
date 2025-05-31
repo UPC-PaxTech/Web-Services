@@ -1,4 +1,5 @@
 package com.paxtech.utime.platform.profiles.domain.model.aggregates;
+import com.paxtech.utime.platform.profiles.domain.model.commands.CreateClientCommand;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -10,7 +11,9 @@ import java.util.Date;
 public class Clients extends AbstractAggregateRoot<Clients> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "client_id")
     @Getter
+
     private Long id;
 
     @Column(nullable = false)
@@ -22,10 +25,19 @@ public class Clients extends AbstractAggregateRoot<Clients> {
     private String name;
 
     @Column(nullable = false)
-    private String password_hash;
+    @Getter
+    private String passwordHash;
 
     @Column(nullable = false)
+    @Getter
     private Boolean is_active;
 
     protected Clients() {}
+
+    public Clients(CreateClientCommand command) {
+        this.birth_date = command.birthDate();
+        this.name = command.name();
+        this.passwordHash = command.passwordHash();
+        this.is_active = Boolean.FALSE;
+    }
 }
