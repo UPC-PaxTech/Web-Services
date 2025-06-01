@@ -1,0 +1,258 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "Profiles" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Clients {
+                    -id: long
+                    -birth_date: Date
+                    -name: String
+                    -passwordHash: String
+                    -is_active: Boolean
+                }
+                class Salons {
+                    -id: long
+                    -name: String
+                    -imageUrl: String
+                    -location: String
+                    -phone: String
+                    -passwordHash: String
+                    -is_active: Boolean
+                }
+                class Socials {}
+                class Salon_Profiles {}
+                class Portfolio_Images {}
+            }
+            package "Commands" {
+                class CreateClientCommand <<Record>>
+                class CreateSalonCommand <<Record>>
+                class CreateSalonProfiles <<Record>>
+            }
+            package "Queries" {
+                class GetAllClientsQuery <<Record>>
+                class GetAllSalonsQuery <<Record>>
+                class GetClientsByIdQuery <<Record>>
+                class GetSalonByEmailQuery <<Record>>
+                class GetSalonByIdQuery <<Record>>
+            }
+        }
+        package "Services" {
+            class ClientCommandService <<Interface>>
+            class ClientsQueryService <<Interface>>
+            class SalonCommandService <<Interface>>
+            class SalonsQueryService <<Interface>>
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class ClientCommandServiceImpl {
+                    -ClientRepository: clientRepository
+                    --
+                    +Optional<Clients> handle (CreateClientCommand command)
+                }
+                class SalonCommandServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +Optional<Clients> handle (CreateSalonCommand command)
+                }
+            }
+            package QueryServices {
+                class ClientsQueryServiceImpl {
+                    -ClientRepository: clientRepository
+                    --
+                    +List<Clients> handle(GetAllClientsQuery query)
+                    +Optional<Clients> handle(GetClientsByIdQuery query)
+                }
+                class SalonsQueryServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +List<Salons> handle(GetAllSalonsQuery query)
+                    +Optional<Clients> handle(GetSalonsByIdQuery query)
+                    +Optional<Clients> handle(GetClientsByEmailQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class ClientRepository <<Interface>> {}
+                class SalonRepository <<Interface>> {}
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class ClientController {
+                    -ClientCommandService: clientRepository
+                    -ClientsQueryService: clientQueryService
+                    --
+                    +ResponseEntity<ClientResource>: createClient()
+                    +ResponseEntity<ClientResource>: getClientByIdPath()
+                    +ResponseEntity<?>: getClients()
+                    +ResponseEntity<ClientResource>: getClientById()
+                    +ResponseEntity<List<ClientResource>>: getAllClients()
+                }
+                class SalonsController {
+                    -SalonsCommandService: salonRepository
+                    -SalonQueryService: salonQueryService
+                    --
+                    +ResponseEntity<SalonResource>: createSalon()
+                    +ResponseEntity<SalonResource>: getSalonByIdPath()
+                    +ResponseEntity<?>: getSalonWithParameters()
+                    +ResponseEntity<SalonResource>: getSalonById()
+                    +ResponseEntity<SalonResource>: getSalonByEmail()
+                    +ResponseEntity<List<SalonResource>>: getAllSalons()
+                }
+            }
+            package "Resources" {
+                class ClientResource <<Record>> {}
+                class CreateClientResource <<Record>> {}
+                class CreateSalonCommand <<Record>> {}
+                class SalonResource <<Record>> {}
+            }
+            package "Assembler" {
+                class ClientResourceFrontEntityAssembler {
+                    +ClientResource: toResourceFromEntity()
+                }
+                class CreateClientCommandFromResourceAssembler {
+                    +CreateClientCommand: toCommandFromResource()
+                }
+                class CreateSalonCommandFromResourceAssembler {
+                    +CreateSalonCommand: toCommandFromResource()
+                }
+                class SalonResourceFromEntityAssembler {
+                    +SalonResource: toResourceFromEntity()
+                }
+            }
+        }
+    }
+}
+
+package "Services" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {}
+            package "Commands" {}
+            package "Queries" {}
+        }
+        package "Services" {}
+    }
+    package "Application" {
+        package "Internal" {}
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {}
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {}
+            package "Resources" {}
+            package "Assembler" {}
+        }
+    }
+}
+
+package "Reviews" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {}
+            package "Commands" {}
+            package "Queries" {}
+        }
+        package "Services" {}
+    }
+    package "Application" {
+        package "Internal" {}
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {}
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {}
+            package "Resources" {}
+            package "Assembler" {}
+        }
+    }
+}
+
+package "Reservations" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {}
+            package "Commands" {}
+            package "Queries" {}
+        }
+        package "Services" {}
+    }
+    package "Application" {
+        package "Internal" {}
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {}
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {}
+            package "Resources" {}
+            package "Assembler" {}
+        }
+    }
+}
+
+
+
+package "Shared" {
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {}
+        }
+    }
+}
+
+package "Workers" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {}
+            package "Commands" {}
+            package "Queries" {}
+        }
+        package "Services" {}
+    }
+    package "Application" {
+        package "Internal" {}
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {}
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {}
+            package "Resources" {}
+            package "Assembler" {}
+        }
+    }
+}
+
+
+@enduml
+
+  package "Components" {
+    class AppointmentsItemComponent {
+      - appointment: ClientAppointment
+      + formatDay(dateString: string): string
+      + formatTime(dateString: string): string
+    }
