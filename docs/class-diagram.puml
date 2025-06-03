@@ -41,8 +41,7 @@ package "Profiles" {
             }
             package "ValueObjects"{
                 class ClientName <<ValueObject>> {
-                    -firstName: String
-                    -lastName: String
+                    -name: String
                 }
                 class Birth_date <<ValueObject>> {
                     -date: LocalDate
@@ -54,21 +53,17 @@ package "Profiles" {
                     -url: String
                 }
                 class SalonLocation <<ValueObject>> {
-                    -address: String
-                    -city: String
-                    -state: String
-                    -zipCode: String
+                    -location: String
                 }
                 class SalonPhone <<ValueObject>> {
                     -phoneNumber: String
                 }
                 class SalonPasswordHash <<ValueObject>> {
-                    -hash: String
+                    -passwordHash: String
                 }
                 class SalonIsActive <<ValueObject>> {
-                    -isActive: Boolean
+                    -is_Active: Boolean
                 }
-
             }
         }
         package "Services" {
