@@ -5,6 +5,8 @@ public record Location(String street, String city, String postalCode, String cou
         this(null, null, null, null);
     }
 
+
+
     public String getStreetAddress() {
         return "%s %s, %s, %s, %s".formatted(street, city, postalCode, country);
     }

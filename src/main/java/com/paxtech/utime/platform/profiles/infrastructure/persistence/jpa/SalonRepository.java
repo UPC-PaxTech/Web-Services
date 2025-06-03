@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface SalonRepository extends JpaRepository<Salon, Long> {
-    boolean existsByEmail(String email);
-    Optional<Salon> findByEmail(String email);
+
+
 
 }

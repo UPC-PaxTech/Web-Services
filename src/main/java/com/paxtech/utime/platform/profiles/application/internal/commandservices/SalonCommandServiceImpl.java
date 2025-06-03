@@ -18,9 +18,6 @@ public class SalonCommandServiceImpl implements SalonCommandService {
 
     @Override
     public Optional<Salon> handle(CreateSalonCommand command) {
-        if (salonRepository.existsByEmail(command.email()))
-            throw new IllegalArgumentException("Salon with this email already exists");
-
         var salon = new Salon(command);
         var saved = salonRepository.save(salon);
         return Optional.of(saved);

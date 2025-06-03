@@ -1,11 +1,11 @@
 package com.paxtech.utime.platform.profiles.domain.model.aggregates;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
+import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Contact;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Image;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Location;
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -21,33 +21,40 @@ public class Salon extends AuditableAbstractAggregateRoot<Salon> {
     @Embedded
     private Contact salonContact;
 
+    public Salon(String imgUrl,String street, String city, String postalCode, String country, String phone, String email) {
+        this.imageUrl = new Image(imgUrl);
+        this.location = new Location(street, city, postalCode, country);
+        this.salonContact = new Contact(phone, email);
 
-
-    @Column(length = 9, nullable = false)
-    @Getter
-    private String phone;
-
-    @Column(length = 25, nullable = false)
-    @Getter
-    private String email;
-
-    @Column(name = "password_hash", length = 40, nullable = false)
-    @Getter
-    private String passwordHash;
-
-    @Column(name = "is_active", nullable = false)
-    @Getter
-    private Boolean isActive;
+    }
 
     protected Salon() {}
 
     public Salon(CreateSalonCommand command) {
-        this.imageUrl = command.imageUrl();
-        this.location = command.location();
-        this.phone = command.phone();
-        this.email = command.email();
-        this.passwordHash = command.passwordHash();
-        this.isActive = Boolean.FALSE;
+        this.imageUrl = new Image(command.imageUrl());
+        this.location = new Location(command.street(), command.city(), command.postalCode(), command.country());
+        this.salonContact = new Contact(command.email(), command.phone());
+    }
 
+    public String getImageUrl() {
+        return imageUrl.getUrl();
+    }
+    public String getStreet() {
+        return location.street();
+    }
+    public String getCity() {
+        return location.city();
+    }
+    public String getPostalCode() {
+        return location.postalCode();
+    }
+    public String getCountry() {
+        return location.country();
+    }
+    public String getPhone() {
+        return salonContact.getPhone();
+    }
+    public String getEmail() {
+        return salonContact.getEmail();
     }
 }

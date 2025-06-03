@@ -5,6 +5,6 @@ import com.paxtech.utime.platform.profiles.interfaces.rest.resources.SalonResour
 
 public class SalonResourceFromEntityAssembler {
     public static SalonResource toResourceFromEntity(Salon entity) {
-        return new SalonResource(entity.getId(), entity.getLocation(), entity.getPhone(), entity.getEmail(), entity.getPasswordHash());
+        return new SalonResource(entity.getId(), entity.getStreet(), entity.getPhone(), entity.getEmail());
     }
 }

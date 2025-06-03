@@ -2,7 +2,6 @@ package com.paxtech.utime.platform.profiles.interfaces.rest.controllers;
 
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salon;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllSalonsQuery;
-import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByEmailQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.SalonCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.SalonsQueryService;
@@ -66,44 +65,27 @@ public class SalonsController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
-    @Operation(summary = "Get salons with filters", description = "Retrieve salon(s) by ID, email, or get all")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Salon(s) retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Salon(s) not found"),
-            @ApiResponse(responseCode = "400", description = "Bad request")
-    })
-    @Parameters({
-            @Parameter(name = "id", description = "Salon ID"),
-            @Parameter(name = "email", description = "Salon email")
-    })
-    @GetMapping
-    public ResponseEntity<?> getSalonsWithParameters(
-            @Parameter(name = "params", hidden = true)
-            @RequestParam Map<String, String> params) {
-
-        if (params.containsKey("id")) {
-            return getSalonById(Long.parseLong(params.get("id")));
-        } else if (params.containsKey("email")) {
-            return getSalonByEmail(params.get("email"));
-        } else {
-            return getAllSalons();
-        }
-    }
-
-
-
     private ResponseEntity<SalonResource> getSalonById(Long id) {
         Optional<Salon> salon = salonsQueryService.handle(new GetSalonByIdQuery(id));
         return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    private ResponseEntity<SalonResource> getSalonByEmail(String email) {
-        Optional<Salon> salon = salonsQueryService.handle(new GetSalonByEmailQuery(email));
-        return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @Operation(
+            summary = "Get all salons",
+            description = "Gets all salons in endpoint"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite source(s) found"),
+            @ApiResponse(responseCode = "404", description = "Favorite source(s) not found"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
+    @GetMapping
+    public ResponseEntity<?> AllSalons() {
+        return getAllSalons();
     }
+
+
 
     private ResponseEntity<List<SalonResource>> getAllSalons() {
         List<Salon> salons = salonsQueryService.handle(new GetAllSalonsQuery());

@@ -5,6 +5,6 @@ import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateSalon
 
 public class CreateSalonCommandFromResourceAssembler {
     public static CreateSalonCommand toCommandFromResource(CreateSalonResource resource) {
-        return new CreateSalonCommand(resource.imageUrl(), resource.location(), resource.phone(), resource.email(), resource.passwordHash());
+        return new CreateSalonCommand(resource.imageUrl(), resource.street(), resource.city(), resource.postalCode(), resource.country(), resource.phone(), resource.email());
     }
 }
