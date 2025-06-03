@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.application.internal.commandservices;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salons;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salon;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
 import com.paxtech.utime.platform.profiles.domain.services.SalonCommandService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.SalonRepository;
@@ -17,11 +17,11 @@ public class SalonCommandServiceImpl implements SalonCommandService {
     }
 
     @Override
-    public Optional<Salons> handle(CreateSalonCommand command) {
+    public Optional<Salon> handle(CreateSalonCommand command) {
         if (salonRepository.existsByEmail(command.email()))
             throw new IllegalArgumentException("Salon with this email already exists");
 
-        var salon = new Salons(command);
+        var salon = new Salon(command);
         var saved = salonRepository.save(salon);
         return Optional.of(saved);
     }

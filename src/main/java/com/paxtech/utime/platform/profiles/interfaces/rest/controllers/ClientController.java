@@ -1,26 +1,15 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.controllers;
 
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Clients;
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salons;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllClientsQuery;
-import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllSalonsQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientsByIdQuery;
-import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ClientCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.ClientsQueryService;
-import com.paxtech.utime.platform.profiles.domain.services.SalonCommandService;
-import com.paxtech.utime.platform.profiles.domain.services.SalonsQueryService;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ClientResource;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateClientResource;
-import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateSalonResource;
-import com.paxtech.utime.platform.profiles.interfaces.rest.resources.SalonResource;
 import com.paxtech.utime.platform.profiles.interfaces.rest.transform.ClientResourceFrontEntityAssembler;
 import com.paxtech.utime.platform.profiles.interfaces.rest.transform.CreateClientCommandFromResourceAssembler;
-import com.paxtech.utime.platform.profiles.interfaces.rest.transform.CreateSalonCommandFromResourceAssembler;
-import com.paxtech.utime.platform.profiles.interfaces.rest.transform.SalonResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;

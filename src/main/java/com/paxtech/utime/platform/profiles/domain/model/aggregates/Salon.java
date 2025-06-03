@@ -1,5 +1,8 @@
 package com.paxtech.utime.platform.profiles.domain.model.aggregates;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
+import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Image;
+import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Location;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -7,21 +10,18 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Salons extends AbstractAggregateRoot<Salons> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "salon_id")
-    @Getter
+public class Salon extends AuditableAbstractAggregateRoot<Salon> {
 
-    private Long id;
+    @Embedded
+    private Image imageUrl;
 
-    @Column(name = "image_url", length = 150, nullable = false)
-    @Getter
-    private String imageUrl;
+    @Embedded
+    private Location location;
 
-    @Column(length = 30, nullable = false)
-    @Getter
-    private String location;
+    @Embedded
+    private Contact salonContact;
+
+
 
     @Column(length = 9, nullable = false)
     @Getter
@@ -39,9 +39,9 @@ public class Salons extends AbstractAggregateRoot<Salons> {
     @Getter
     private Boolean isActive;
 
-    protected Salons() {}
+    protected Salon() {}
 
-    public Salons(CreateSalonCommand command) {
+    public Salon(CreateSalonCommand command) {
         this.imageUrl = command.imageUrl();
         this.location = command.location();
         this.phone = command.phone();

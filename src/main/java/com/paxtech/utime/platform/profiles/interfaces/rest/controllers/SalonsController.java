@@ -1,7 +1,6 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.controllers;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salons;
-import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salon;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllSalonsQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByEmailQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByIdQuery;
@@ -47,7 +46,7 @@ public class SalonsController {
     })
     @PostMapping
     public ResponseEntity<SalonResource> createSalon(@RequestBody CreateSalonResource resource) {
-        Optional<Salons> salon = salonCommandService.handle(CreateSalonCommandFromResourceAssembler.toCommandFromResource(resource));
+        Optional<Salon> salon = salonCommandService.handle(CreateSalonCommandFromResourceAssembler.toCommandFromResource(resource));
         return salon.map(value -> new ResponseEntity<>(SalonResourceFromEntityAssembler.toResourceFromEntity(value), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -95,19 +94,19 @@ public class SalonsController {
 
 
     private ResponseEntity<SalonResource> getSalonById(Long id) {
-        Optional<Salons> salon = salonsQueryService.handle(new GetSalonByIdQuery(id));
+        Optional<Salon> salon = salonsQueryService.handle(new GetSalonByIdQuery(id));
         return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     private ResponseEntity<SalonResource> getSalonByEmail(String email) {
-        Optional<Salons> salon = salonsQueryService.handle(new GetSalonByEmailQuery(email));
+        Optional<Salon> salon = salonsQueryService.handle(new GetSalonByEmailQuery(email));
         return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     private ResponseEntity<List<SalonResource>> getAllSalons() {
-        List<Salons> salons = salonsQueryService.handle(new GetAllSalonsQuery());
+        List<Salon> salons = salonsQueryService.handle(new GetAllSalonsQuery());
         if (salons.isEmpty()) return ResponseEntity.notFound().build();
         var resources = salons.stream()
                 .map(SalonResourceFromEntityAssembler::toResourceFromEntity)
