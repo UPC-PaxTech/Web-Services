@@ -6,20 +6,20 @@ package "Profiles" {
         package "Model" {
             package "Aggregates" {
                 class Clients {
-                    -id: long
-                    -birth_date: Date
-                    -name: String
-                    -passwordHash: String
+                    -id: client_id
+                    -birth_date: Birth_date
+                    -name: ClientName
+                    -passwordHash: 
                     -is_active: Boolean
                 }
                 class Salons {
-                    -id: long
-                    -name: String
-                    -imageUrl: String
-                    -location: String
-                    -phone: String
-                    -passwordHash: String
-                    -is_active: Boolean
+                    -id: SalonId
+                    -name: SalonName
+                    -imageUrl: SalonImageUrl
+                    -location: SalonLocation
+                    -phone: SalonPhone
+                    -passwordHash: SalonPasswordHash
+                    -is_active: SalonIsActive
                 }
                 class Socials {}
                 class Salon_Profiles {}  
@@ -38,6 +38,37 @@ package "Profiles" {
                 class GetClientsByIdQuery <<Record>>
                 class GetSalonByEmailQuery <<Record>>
                 class GetSalonByIdQuery <<Record>>
+            }
+            package "ValueObjects"{
+                class ClientName <<ValueObject>> {
+                    -firstName: String
+                    -lastName: String
+                }
+                class Birth_date <<ValueObject>> {
+                    -date: LocalDate
+                }
+                class SalonName <<ValueObject>> {
+                    -name: String
+                }
+                class SalonImageUrl <<ValueObject>> {
+                    -url: String
+                }
+                class SalonLocation <<ValueObject>> {
+                    -address: String
+                    -city: String
+                    -state: String
+                    -zipCode: String
+                }
+                class SalonPhone <<ValueObject>> {
+                    -phoneNumber: String
+                }
+                class SalonPasswordHash <<ValueObject>> {
+                    -hash: String
+                }
+                class SalonIsActive <<ValueObject>> {
+                    -isActive: Boolean
+                }
+
             }
         }
         package "Services" {
