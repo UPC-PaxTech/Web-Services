@@ -5,21 +5,20 @@ package "Profiles" {
     package "Domain" {
         package "Model" {
             package "Aggregates" {
+                class Accounts {
+                    -passwordHash: PasswordHash
+                    -is_active: IsActive
+                    -name: Name
+                }
                 class Clients {
-                    -id: client_id
-                    -birth_date: Birth_date
-                    -name: ClientName
-                    -passwordHash: 
-                    -is_active: Boolean
+                    -id: clientId
+                    -birth_date: ClientBirthDate
                 }
                 class Salons {
                     -id: SalonId
-                    -name: SalonName
                     -imageUrl: SalonImageUrl
                     -location: SalonLocation
-                    -phone: SalonPhone
-                    -passwordHash: SalonPasswordHash
-                    -is_active: SalonIsActive
+                    -contact: SalonContact
                 }
                 class Socials {}
                 class Salon_Profiles {}  
@@ -40,13 +39,16 @@ package "Profiles" {
                 class GetSalonByIdQuery <<Record>>
             }
             package "ValueObjects"{
-                class ClientName <<ValueObject>> {
-                    -name: String
+                class ClientId <<ValueObject>> {
+                    -id: long
                 }
-                class Birth_date <<ValueObject>> {
+                class SalonId <<ValueObject>> {
+                    -id: long
+                }
+                class ClientBirthDate <<ValueObject>> {
                     -date: LocalDate
                 }
-                class SalonName <<ValueObject>> {
+                class Name <<ValueObject>> {
                     -name: String
                 }
                 class SalonImageUrl <<ValueObject>> {
@@ -55,13 +57,14 @@ package "Profiles" {
                 class SalonLocation <<ValueObject>> {
                     -location: String
                 }
-                class SalonPhone <<ValueObject>> {
+                class SalonContact <<ValueObject>> {
                     -phoneNumber: String
+                    -email: String
                 }
-                class SalonPasswordHash <<ValueObject>> {
+                class PasswordHash <<ValueObject>> {
                     -passwordHash: String
                 }
-                class SalonIsActive <<ValueObject>> {
+                class IsActive <<ValueObject>> {
                     -is_Active: Boolean
                 }
             }
