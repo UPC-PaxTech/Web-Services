@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.application.internal.commandservices;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Account;
+import com.paxtech.utime.platform.profiles.domain.model.entity.Account;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateAccountCommand;
 import com.paxtech.utime.platform.profiles.domain.services.AccountCommandService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.AccountRepository;
@@ -18,7 +18,7 @@ public class AccountCommandServiceImpl implements AccountCommandService {
 
     @Override
     public Optional<Account> handle(CreateAccountCommand command) {
-        if (accountRepository.existsByUsername(command.userName())){
+        if (accountRepository.existsByUser_name(command.userName())){
             throw new IllegalArgumentException("Account with same username already exists");
         }
 

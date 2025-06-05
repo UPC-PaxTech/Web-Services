@@ -1,11 +1,11 @@
 package com.paxtech.utime.platform.profiles.domain.model.aggregates;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
+import com.paxtech.utime.platform.profiles.domain.model.entity.Account;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Contact;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Image;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.Location;
 import jakarta.persistence.*;
-import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -20,6 +20,10 @@ public class Salon extends AuditableAbstractAggregateRoot<Salon> {
 
     @Embedded
     private Contact salonContact;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     public Salon(String imgUrl,String street, String city, String postalCode, String country, String phone, String email) {
         this.imageUrl = new Image(imgUrl);

@@ -1,16 +1,16 @@
-package com.paxtech.utime.platform.profiles.domain.model.aggregates;
+package com.paxtech.utime.platform.profiles.domain.model.entity;
 
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateAccountCommand;
-import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.*;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import com.paxtech.utime.platform.shared.domain.model.entities.AuditableModel;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@EntityListeners(AuditingEntityListener.class)
-public class Account extends AuditableAbstractAggregateRoot<Account> {
+@Getter
+public class Account extends AuditableModel {
     @Embedded
     private Password password;
 
