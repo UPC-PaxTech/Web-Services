@@ -1,9 +1,7 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.controllers;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salons;
-import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonCommand;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Salon;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllSalonsQuery;
-import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByEmailQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.SalonCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.SalonsQueryService;
@@ -47,7 +45,7 @@ public class SalonsController {
     })
     @PostMapping
     public ResponseEntity<SalonResource> createSalon(@RequestBody CreateSalonResource resource) {
-        Optional<Salons> salon = salonCommandService.handle(CreateSalonCommandFromResourceAssembler.toCommandFromResource(resource));
+        Optional<Salon> salon = salonCommandService.handle(CreateSalonCommandFromResourceAssembler.toCommandFromResource(resource));
         return salon.map(value -> new ResponseEntity<>(SalonResourceFromEntityAssembler.toResourceFromEntity(value), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -67,47 +65,30 @@ public class SalonsController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    private ResponseEntity<SalonResource> getSalonById(Long id) {
+        Optional<Salon> salon = salonsQueryService.handle(new GetSalonByIdQuery(id));
+        return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-    @Operation(summary = "Get salons with filters", description = "Retrieve salon(s) by ID, email, or get all")
+    @Operation(
+            summary = "Get all salons",
+            description = "Gets all salons in endpoint"
+    )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Salon(s) retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Salon(s) not found"),
+            @ApiResponse(responseCode = "200", description = "Favorite source(s) found"),
+            @ApiResponse(responseCode = "404", description = "Favorite source(s) not found"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    @Parameters({
-            @Parameter(name = "id", description = "Salon ID"),
-            @Parameter(name = "email", description = "Salon email")
-    })
     @GetMapping
-    public ResponseEntity<?> getSalonsWithParameters(
-            @Parameter(name = "params", hidden = true)
-            @RequestParam Map<String, String> params) {
-
-        if (params.containsKey("id")) {
-            return getSalonById(Long.parseLong(params.get("id")));
-        } else if (params.containsKey("email")) {
-            return getSalonByEmail(params.get("email"));
-        } else {
-            return getAllSalons();
-        }
+    public ResponseEntity<?> AllSalons() {
+        return getAllSalons();
     }
 
 
-
-    private ResponseEntity<SalonResource> getSalonById(Long id) {
-        Optional<Salons> salon = salonsQueryService.handle(new GetSalonByIdQuery(id));
-        return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    private ResponseEntity<SalonResource> getSalonByEmail(String email) {
-        Optional<Salons> salon = salonsQueryService.handle(new GetSalonByEmailQuery(email));
-        return salon.map(value -> ResponseEntity.ok(SalonResourceFromEntityAssembler.toResourceFromEntity(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
 
     private ResponseEntity<List<SalonResource>> getAllSalons() {
-        List<Salons> salons = salonsQueryService.handle(new GetAllSalonsQuery());
+        List<Salon> salons = salonsQueryService.handle(new GetAllSalonsQuery());
         if (salons.isEmpty()) return ResponseEntity.notFound().build();
         var resources = salons.stream()
                 .map(SalonResourceFromEntityAssembler::toResourceFromEntity)
