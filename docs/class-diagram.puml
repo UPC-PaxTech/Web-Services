@@ -1,17 +1,10 @@
-@startuml
+@startuml uTime Backend
 skinparam packageStyle rectangle
 
 package "Profiles" {
     package "Domain" {
         package "Model" {
             package "Aggregates" {
-                class Accounts {
-                    -passwordHash: PasswordHash
-                    -is_active: IsActive
-                    -firstName: FirstName
-                    -lastName: LastName
-                    -contact: Contact
-                }
                 class Clients {
                     -id: clientId
                     -birth_date: ClientBirthDate
@@ -35,6 +28,15 @@ package "Profiles" {
                     -portfolioImagesId: PortfolioImageId
                     -salonId: SalonId
                     -imageUrl: ImageUrl
+                }
+            }
+            package "Entities" {
+                class Accounts {
+                    -passwordHash: PasswordHash
+                    -is_active: IsActive
+                    -firstName: FirstName
+                    -lastName: LastName
+                    -contact: Contact
                 }
             }
             package "Commands" {
