@@ -16,16 +16,16 @@ package "Profiles" {
                     -location: SalonLocation
                 }
                 class Socials {
-                    -socialId: SocialId
+                    -id: SocialId
                     -socialData: SocialData
                 }
                 class Salon_Profiles {
-                    -salonProfilesId: SalonProfilesId
+                    -id: SalonProfilesId
                     -profileImageUrl: ProfileImageUrl
                     -coverImageUrl: CoverImageUrl
                 }
                 class Portfolio_Images {
-                    -portfolioImagesId: PortfolioImageId
+                    -id: PortfolioImageId
                     -salonId: SalonId
                     -imageUrl: ImageUrl
                 }
