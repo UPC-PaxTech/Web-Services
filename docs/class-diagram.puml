@@ -125,9 +125,29 @@ package "Profiles" {
             }
             class SalonsQueryService <<Interface>> {
                 +List<Salons> handle(GetAllSalonsQuery query)
-                --
                 +Optional<Clients> handle(GetSalonsByIdQuery query)
                 +Optional<Clients> handle(GetClientsByEmailQuery query)
+            }
+            class SalonProfilesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSalonProfiles command)
+            }
+            class SalonProfilesQueryService <<Interface>> {
+                +List<Salon_Profiles> handle(GetAllSalonProfilesQuery query)
+                +Optional<Salon_Profiles> handle(GetSalonProfileByIdQuery query)
+            }
+            class PortfolioImagesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreatePortfolioImagesCommand command)
+            }
+            class PortfolioImagesQueryService <<Interface>> {
+                +List<Portfolio_Images> handle(GetAllPortfolioImagesQuery query)
+                +Optional<Portfolio_Images> handle(GetPortfolioImageByIdQuery query)
+            }
+            class SocialsCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSocialsCommand command)
+            }
+            class SocialsQueryService <<Interface>> {
+                +List<Socials> handle(GetAllSocialsQuery query)
+                +Optional<Socials> handle(GetSocialByIdQuery query)
             }
         }
     }
@@ -218,6 +238,36 @@ package "Profiles" {
                     +ResponseEntity<SalonResource>: getSalonById()
                     +ResponseEntity<SalonResource>: getSalonByEmail()
                     +ResponseEntity<List<SalonResource>>: getAllSalons()
+                }
+                class SalonProfilesController {
+                    -SalonProfilesCommandService: salonProfilesCommandService
+                    -SalonProfilesQueryService: salonProfilesQueryService
+                    --
+                    +ResponseEntity<SalonProfilesResource>: createSalonProfile()
+                    +ResponseEntity<SalonProfilesResource>: getSalonProfileByIdPath()
+                    +ResponseEntity<?>: getSalonProfileWithParameters()
+                    +ResponseEntity<SalonProfilesResource>: getSalonProfileById()
+                    +ResponseEntity<List<SalonProfilesResource>>: getAllSalonProfiles()
+                }
+                class PortfolioImagesController {
+                    -PortfolioImagesCommandService: portfolioImagesCommandService
+                    -PortfolioImagesQueryService: portfolioImagesQueryService
+                    --
+                    +ResponseEntity<PortfolioImagesResource>: createPortfolioImage()
+                    +ResponseEntity<PortfolioImagesResource>: getPortfolioImageByIdPath()
+                    +ResponseEntity<?>: getPortfolioImageWithParameters()
+                    +ResponseEntity<PortfolioImagesResource>: getPortfolioImageById()
+                    +ResponseEntity<List<PortfolioImagesResource>>: getAllPortfolioImages()
+                }
+                class SocialsController {
+                    -SocialsCommandService: socialsCommandService
+                    -SocialsQueryService: socialsQueryService
+                    --
+                    +ResponseEntity<SocialsResource>: createSocial()
+                    +ResponseEntity<SocialsResource>: getSocialByIdPath()
+                    +ResponseEntity<?>: getSocialWithParameters()
+                    +ResponseEntity<SocialsResource>: getSocialById()
+                    +ResponseEntity<List<SocialsResource>>: getAllSocials()
                 }
             }
             package "Resources" {
