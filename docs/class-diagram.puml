@@ -8,7 +8,9 @@ package "Profiles" {
                 class Accounts {
                     -passwordHash: PasswordHash
                     -is_active: IsActive
-                    -name: Name
+                    -firstName: FirstName
+                    -lastName: LastName
+                    -contact: Contact
                 }
                 class Clients {
                     -id: clientId
@@ -16,13 +18,24 @@ package "Profiles" {
                 }
                 class Salons {
                     -id: SalonId
+                    -salonProfilesId: SalonProfilesId
                     -imageUrl: SalonImageUrl
                     -location: SalonLocation
-                    -contact: SalonContact
                 }
-                class Socials {}
-                class Salon_Profiles {}  
-                class Portfolio_Images {}
+                class Socials {
+                    -socialId: SocialId
+                    -socialData: SocialData
+                }
+                class Salon_Profiles {
+                    -salonProfilesId: SalonProfilesId
+                    -profileImageUrl: ProfileImageUrl
+                    -coverImageUrl: CoverImageUrl
+                }
+                class Portfolio_Images {
+                    -portfolioImagesId: PortfolioImageId
+                    -salonId: SalonId
+                    -imageUrl: ImageUrl
+                }
             }
             package "Commands" {
                 class CreateClientCommand <<Record>>
@@ -48,7 +61,10 @@ package "Profiles" {
                 class ClientBirthDate <<ValueObject>> {
                     -date: LocalDate
                 }
-                class Name <<ValueObject>> {
+                class firstName <<ValueObject>> {
+                    -name: String
+                }
+                class lastName <<ValueObject>> {
                     -name: String
                 }
                 class SalonImageUrl <<ValueObject>> {
@@ -57,7 +73,7 @@ package "Profiles" {
                 class SalonLocation <<ValueObject>> {
                     -location: String
                 }
-                class SalonContact <<ValueObject>> {
+                class Contact <<ValueObject>> {
                     -phoneNumber: String
                     -email: String
                 }
@@ -66,6 +82,28 @@ package "Profiles" {
                 }
                 class IsActive <<ValueObject>> {
                     -is_Active: Boolean
+                }
+                class SocialId <<ValueObject>> {
+                    -id: long
+                }
+                class SocialData <<ValueObject>> {
+                    -socialUrl: String
+                    -socialIcon: String
+                }
+                class SalonProfilesId <<ValueObject>> {
+                    -salonProfilesId: long
+                }
+                class ProfileImageUrl <<ValueObject>> {
+                    -profileImageUrl: String
+                }
+                class CoverImageUrl <<ValueObject>> {
+                    -coverImageUrl: String
+                }
+                class PortfolioImagesId <<ValueObject>> {
+                    -portfolioImagesId: long
+                }
+                class ImageUrl <<ValueObject>> {
+                    -imageUrl: String
                 }
             }
         }
