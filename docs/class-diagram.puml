@@ -34,8 +34,7 @@ package "Profiles" {
                 class Accounts {
                     -passwordHash: PasswordHash
                     -is_active: IsActive
-                    -firstName: FirstName
-                    -lastName: LastName
+                    -fullName: FullName
                     -contact: Contact
                 }
             }
@@ -63,11 +62,13 @@ package "Profiles" {
                 class ClientBirthDate <<ValueObject>> {
                     -date: LocalDate
                 }
-                class firstName <<ValueObject>> {
-                    -name: String
-                }
-                class lastName <<ValueObject>> {
-                    -name: String
+                class FullName <<ValueObject>> {
+                    -firstName: String
+                    -lastName: String
+                    --
+                    +getFullName(): String
+                    +getFirstName(): String
+                    +getLastName(): String
                 }
                 class SalonImageUrl <<ValueObject>> {
                     -url: String
@@ -91,6 +92,9 @@ package "Profiles" {
                 class SocialData <<ValueObject>> {
                     -socialUrl: String
                     -socialIcon: String
+                    --
+                    +getSocialUrl(): String
+                    +getSocialIcon(): String
                 }
                 class SalonProfilesId <<ValueObject>> {
                     -salonProfilesId: long
