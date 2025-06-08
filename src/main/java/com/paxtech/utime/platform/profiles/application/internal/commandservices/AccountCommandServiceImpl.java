@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.application.internal.commandservices;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Account;
+import com.paxtech.utime.platform.profiles.domain.model.entity.Account;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateAccountCommand;
 import com.paxtech.utime.platform.profiles.domain.services.AccountCommandService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.AccountRepository;

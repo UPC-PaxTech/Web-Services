@@ -1,0 +1,704 @@
+@startuml uTime Backend
+skinparam packageStyle rectangle
+
+package "Profiles" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Clients {
+                    -birth_date: ClientBirthDate
+                }
+                class Salons {
+                    -salonProfilesId: SalonProfilesId
+                    -imageUrl: SalonImageUrl
+                    -location: SalonLocation
+                }
+                class Socials {
+                    -socialData: SocialData
+                }
+                class Salon_Profiles {
+                    -profileImageUrl: ProfileImageUrl
+                    -coverImageUrl: CoverImageUrl
+                }
+                class Portfolio_Images {
+                    -salonId: SalonId
+                    -imageUrl: ImageUrl
+                }
+            }
+            package "Entity" {
+                class Accounts {
+                    -passwordHash: PasswordHash
+                    -is_active: IsActive
+                    -fullName: FullName
+                    -companyName: CompanyName
+                    -contact: Contact
+                }
+            }
+            package "Commands" {
+                class CreateClientCommand <<Record>>
+                class CreateSalonCommand <<Record>>
+                class CreateSalonProfiles <<Record>>
+                class CreatePortfolioImagesCommand <<Record>>
+                class CreateSocialsCommand <<Record>>
+            }
+            package "Queries" {
+                class GetAllClientsQuery <<Record>>
+                class GetAllSalonsQuery <<Record>>
+                class GetClientsByIdQuery <<Record>>
+                class GetSalonByEmailQuery <<Record>>
+                class GetSalonByIdQuery <<Record>>
+            }
+            package "ValueObjects"{
+                class ClientId <<ValueObject>> {
+                    -id: long
+                }
+                class SalonId <<ValueObject>> {
+                    -id: long
+                }
+                class ClientBirthDate <<ValueObject>> {
+                    -date: LocalDate
+                }
+                class FullName <<ValueObject>> {
+                    -firstName: String
+                    -lastName: String
+                    --
+                    +getFullName(): String
+                    +getFirstName(): String
+                    +getLastName(): String
+                }
+                class SalonImageUrl <<ValueObject>> {
+                    -url: String
+                }
+                class SalonLocation <<ValueObject>> {
+                    -location: String
+                }
+                class Contact <<ValueObject>> {
+                    -phoneNumber: String
+                    -email: String
+                }
+                class PasswordHash <<ValueObject>> {
+                    -passwordHash: String
+                }
+                class IsActive <<ValueObject>> {
+                    -is_Active: Boolean
+                }
+                class SocialId <<ValueObject>> {
+                    -id: long
+                }
+                class SocialData <<ValueObject>> {
+                    -socialUrl: String
+                    -socialIcon: String
+                    --
+                    +getSocialUrl(): String
+                    +getSocialIcon(): String
+                }
+                class SalonProfilesId <<ValueObject>> {
+                    -salonProfilesId: long
+                }
+                class ProfileImageUrl <<ValueObject>> {
+                    -profileImageUrl: String
+                }
+                class CoverImageUrl <<ValueObject>> {
+                    -coverImageUrl: String
+                }
+                class PortfolioImagesId <<ValueObject>> {
+                    -portfolioImagesId: long
+                }
+                class ImageUrl <<ValueObject>> {
+                    -imageUrl: String
+                }
+                class CompanyName <<ValueObject>> {
+                    -companyName: String
+                }
+            }
+        }
+        package "Services" {
+            class ClientCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateClientCommand command)
+            }
+            class ClientsQueryService <<Interface>> {
+                +List<Clients> handle(GetAllClientsQuery query)
+                +Optional<Clients> handle(GetClientsByIdQuery query)
+            }
+            class SalonCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSalonCommand command)
+            }
+            class SalonsQueryService <<Interface>> {
+                +List<Salons> handle(GetAllSalonsQuery query)
+                +Optional<Clients> handle(GetSalonsByIdQuery query)
+                +Optional<Clients> handle(GetClientsByEmailQuery query)
+            }
+            class SalonProfilesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSalonProfiles command)
+            }
+            class SalonProfilesQueryService <<Interface>> {
+                +List<Salon_Profiles> handle(GetAllSalonProfilesQuery query)
+                +Optional<Salon_Profiles> handle(GetSalonProfileByIdQuery query)
+            }
+            class PortfolioImagesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreatePortfolioImagesCommand command)
+            }
+            class PortfolioImagesQueryService <<Interface>> {
+                +List<Portfolio_Images> handle(GetAllPortfolioImagesQuery query)
+                +Optional<Portfolio_Images> handle(GetPortfolioImageByIdQuery query)
+            }
+            class SocialsCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSocialsCommand command)
+            }
+            class SocialsQueryService <<Interface>> {
+                +List<Socials> handle(GetAllSocialsQuery query)
+                +Optional<Socials> handle(GetSocialByIdQuery query)
+            }
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class ClientCommandServiceImpl {
+                    -ClientRepository: clientRepository
+                    --
+                    +ClientCommandServiceImpl(ClientRepository clientRepository)
+                    +Optional<Clients> handle (CreateClientCommand command)
+                }
+                class SalonCommandServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +SalonCommandServiceImpl(SalonRepository salonRepository)
+                    +Optional<Clients> handle (CreateSalonCommand command)
+                }
+                class SalonProfilesCommandServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +SalonProfilesCommandServiceImpl(SalonRepository salonRepository)
+                    +Optional<Clients> handle (CreateSalonProfiles command)
+                }
+                class PortfolioImagesCommandServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +PortfolioImagesCommandServiceImpl(SalonRepository salonRepository)
+                    +Optional<Clients> handle (CreatePortfolioImagesCommand command)
+                }
+                class SocialsCommandServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +SocialsCommandServiceImpl(SalonRepository salonRepository)
+                    +Optional<Clients> handle (CreateSocialsCommand command)
+                }
+            }
+            package QueryServices {
+                class ClientsQueryServiceImpl {
+                    -ClientRepository: clientRepository
+                    --
+                    +List<Clients> handle(GetAllClientsQuery query)
+                    +Optional<Clients> handle(GetClientsByIdQuery query)
+                }
+                class SalonsQueryServiceImpl {
+                    -SalonRepository: salonRepository
+                    --
+                    +List<Salons> handle(GetAllSalonsQuery query)
+                    +Optional<Clients> handle(GetSalonsByIdQuery query)
+                    +Optional<Clients> handle(GetClientsByEmailQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class ClientRepository <<Interface>> {
+                    
+                }
+                class SalonRepository <<Interface>> {
+
+                }
+
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class ClientController {
+                    -ClientCommandService: clientRepository
+                    -ClientsQueryService: clientQueryService
+                    --
+                    +ResponseEntity<ClientResource>: createClient()
+                    +ResponseEntity<ClientResource>: getClientByIdPath()
+                    +ResponseEntity<?>: getClients()
+                    +ResponseEntity<ClientResource>: getClientById()
+                    +ResponseEntity<List<ClientResource>>: getAllClients()
+                }
+                class SalonsController {
+                    -SalonsCommandService: salonRepository
+                    -SalonQueryService: salonQueryService
+                    --
+                    +ResponseEntity<SalonResource>: createSalon()
+                    +ResponseEntity<SalonResource>: getSalonByIdPath()
+                    +ResponseEntity<?>: getSalonWithParameters()
+                    +ResponseEntity<SalonResource>: getSalonById()
+                    +ResponseEntity<SalonResource>: getSalonByEmail()
+                    +ResponseEntity<List<SalonResource>>: getAllSalons()
+                }
+                class SalonProfilesController {
+                    -SalonProfilesCommandService: salonProfilesCommandService
+                    -SalonProfilesQueryService: salonProfilesQueryService
+                    --
+                    +ResponseEntity<SalonProfilesResource>: createSalonProfile()
+                    +ResponseEntity<SalonProfilesResource>: getSalonProfileByIdPath()
+                    +ResponseEntity<?>: getSalonProfileWithParameters()
+                    +ResponseEntity<SalonProfilesResource>: getSalonProfileById()
+                    +ResponseEntity<List<SalonProfilesResource>>: getAllSalonProfiles()
+                }
+                class PortfolioImagesController {
+                    -PortfolioImagesCommandService: portfolioImagesCommandService
+                    -PortfolioImagesQueryService: portfolioImagesQueryService
+                    --
+                    +ResponseEntity<PortfolioImagesResource>: createPortfolioImage()
+                    +ResponseEntity<PortfolioImagesResource>: getPortfolioImageByIdPath()
+                    +ResponseEntity<?>: getPortfolioImageWithParameters()
+                    +ResponseEntity<PortfolioImagesResource>: getPortfolioImageById()
+                    +ResponseEntity<List<PortfolioImagesResource>>: getAllPortfolioImages()
+                }
+                class SocialsController {
+                    -SocialsCommandService: socialsCommandService
+                    -SocialsQueryService: socialsQueryService
+                    --
+                    +ResponseEntity<SocialsResource>: createSocial()
+                    +ResponseEntity<SocialsResource>: getSocialByIdPath()
+                    +ResponseEntity<?>: getSocialWithParameters()
+                    +ResponseEntity<SocialsResource>: getSocialById()
+                    +ResponseEntity<List<SocialsResource>>: getAllSocials()
+                }
+            }
+            package "Resources" {
+                class ClientResource <<Record>> {}
+                class CreateClientResource <<Record>> {}
+                class CreateSalonCommand <<Record>> {}
+                class SalonResource <<Record>> {}
+            }
+            package "Assembler" {
+                class ClientResourceFrontEntityAssembler {
+                    +ClientResource: toResourceFromEntity()
+                }
+                class CreateClientCommandFromResourceAssembler {
+                    +CreateClientCommand: toCommandFromResource()
+                }
+                class CreateSalonCommandFromResourceAssembler {
+                    +CreateSalonCommand: toCommandFromResource()
+                }
+                class SalonResourceFromEntityAssembler {
+                    +SalonResource: toResourceFromEntity()
+                }
+            }
+        }
+    }
+}
+
+package "Services" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Services {
+                    -id: long
+                    -salon_id: long
+                    -name: String
+                    -duration: Integer
+                    -price: Double
+                    -status: Boolean
+                }
+            }
+            package "Commands" {
+                class CreateServiceCommand <<Record>> {}
+                class UpdateServiceCommand <<Record>> {}
+            }
+            package "Queries" {
+                class GetAllServicesQuery <<Record>> {}
+                class GetServiceByIdQuery <<Record>> {}
+                class GetServicesBySalonIdQuery <<Record>> {}
+            }
+        }
+        package "Services" {
+            class ServiceCommandService <<Interface>> {
+                +Optional<Services> handle(CreateServiceCommand command)
+                +Optional<Services> handle(UpdateServiceCommand command)
+            }
+            class ServicesQueryService <<Interface>> {
+                +List<Services> handle(GetAllServicesQuery query)
+                +Optional<Services> handle(GetServiceByIdQuery query)
+                +List<Services> handle(GetServicesBySalonIdQuery query)
+            }
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class ServiceCommandServiceImpl {
+                    -ServiceRepository: serviceRepository
+                    --
+                    +Optional<Services> handle(CreateServiceCommand command)
+                    +Optional<Services> handle(UpdateServiceCommand command)
+                }
+            }
+            package QueryServices {
+                class ServicesQueryServiceImpl {
+                    -ServiceRepository: serviceRepository
+                    --
+                    +List<Services> handle(GetAllServicesQuery query)
+                    +Optional<Services> handle(GetServiceByIdQuery query)
+                    +List<Services> handle(GetServicesBySalonIdQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class ServiceRepository <<Interface>> {}
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class ServiceController {
+                    -ServiceCommandService: serviceCommandService
+                    -ServicesQueryService: servicesQueryService
+                    --
+                    +ResponseEntity<ServiceResource>: createService()
+                    +ResponseEntity<ServiceResource>: updateService()
+                    +ResponseEntity<?>: getServicesWithParameters()
+                    +ResponseEntity<ServiceResource>: getServiceById()
+                    +ResponseEntity<List<ServiceResource>>: getAllServices()
+                }
+            }
+            package "Resources" {
+                class ServiceResource <<Record>> {}
+                class CreateServiceCommand <<Record>> {}
+                class UpdateServiceCommand <<Record>> {}
+            }
+            package "Assembler" {
+                class ServiceResourceFromEntityAssembler {
+                    +ServiceResource: toResourceFromEntity()
+                }
+                class CreateServiceCommandFromResourceAssembler {
+                    +CreateServiceCommand: toCommandFromResource()
+                }
+                class UpdateServiceCommandFromResourceAssembler {
+                    +UpdateServiceCommand: toCommandFromResource()
+                }
+            }
+        }
+    }
+}
+
+package "Reviews" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Reviews {
+                    -id: long
+                    -salon_id: long
+                    -client_id: long
+                    -rating: Integer
+                    -review: String
+                    -read: Boolean
+                }
+            }
+            package "Commands" {
+                class CreateReviewCommand <<Record>> {}
+                class UpdateReviewCommand <<Record>> {}
+            }
+            package "Queries" {
+                class GetAllReviewsQuery <<Record>> {}
+                class GetReviewByIdQuery <<Record>> {}
+                class GetReviewsBySalonIdQuery <<Record>> {}
+                class GetReviewsByClientIdQuery <<Record>> {}
+            }
+        }
+        package "Services" {
+            class ReviewCommandService <<Interface>> {
+                +Optional<Reviews> handle(CreateReviewCommand command)
+                +Optional<Reviews> handle(UpdateReviewCommand command)
+            }
+            class ReviewsQueryService <<Interface>> {
+                +List<Reviews> handle(GetAllReviewsQuery query)
+                +Optional<Reviews> handle(GetReviewByIdQuery query)
+                +List<Reviews> handle(GetReviewsBySalonIdQuery query)
+                +List<Reviews> handle(GetReviewsByClientIdQuery query)
+            }
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class ReviewCommandServiceImpl {
+                    -ReviewRepository: reviewRepository
+                    --
+                    +Optional<Reviews> handle(CreateReviewCommand command)
+                    +Optional<Reviews> handle(UpdateReviewCommand command)
+                }
+            }
+            package QueryServices {
+                class ReviewsQueryServiceImpl {
+                    -ReviewRepository: reviewRepository
+                    --
+                    +List<Reviews> handle(GetAllReviewsQuery query)
+                    +Optional<Reviews> handle(GetReviewByIdQuery query)
+                    +List<Reviews> handle(GetReviewsBySalonIdQuery query)
+                    +List<Reviews> handle(GetReviewsByClientIdQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class ReviewRepository <<Interface>> {}
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class ReviewController {
+                    -ReviewCommandService: reviewCommandService
+                    -ReviewsQueryService: reviewsQueryService
+                    --
+                    +ResponseEntity<ReviewResource>: createReview()
+                    +ResponseEntity<ReviewResource>: updateReview()
+                    +ResponseEntity<?>: getReviewsWithParameters()
+                    +ResponseEntity<ReviewResource>: getReviewById()
+                    +ResponseEntity<List<ReviewResource>>: getAllReviews()
+                }
+            }
+            package "Resources" {
+                class ReviewResource <<Record>> {}
+                class CreateReviewCommand <<Record>> {}
+                class UpdateReviewCommand <<Record>> {}
+            }
+            package "Assembler" {
+                class ReviewResourceFromEntityAssembler {
+                    +ReviewResource: toResourceFromEntity()
+                }
+                class CreateReviewCommandFromResourceAssembler {
+                    +CreateReviewCommand: toCommandFromResource()
+                }
+                class UpdateReviewCommandFromResourceAssembler {
+                    +UpdateReviewCommand: toCommandFromResource()
+                }
+            }
+        }
+    }
+}
+
+package "Reservations" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Reservations {
+                    -id: long
+                    -client_id: long
+                    -salon_id: long
+                    -payment_id: long
+                    -time_slot_id: long
+                    -worker_id: String
+                }
+            }
+            package "Commands" {
+                class CreateReservationCommand <<Record>> {}
+                class UpdateReservationCommand <<Record>> {}
+            }
+            package "Queries" {
+                class GetAllReservationsQuery <<Record>> {}
+                class GetReservationByIdQuery <<Record>> {}
+                class GetReservationsByClientIdQuery <<Record>> {}
+                class GetReservationsBySalonIdQuery <<Record>> {}
+            }
+        }
+        package "Services" {
+            class ReservationCommandService <<Interface>> {
+                +Optional<Reservations> handle(CreateReservationCommand command)
+                +Optional<Reservations> handle(UpdateReservationCommand command)
+            }
+            class ReservationsQueryService <<Interface>> {
+                +List<Reservations> handle(GetAllReservationsQuery query)
+                +Optional<Reservations> handle(GetReservationByIdQuery query)
+                +List<Reservations> handle(GetReservationsByClientIdQuery query)
+                +List<Reservations> handle(GetReservationsBySalonIdQuery query)
+                +List<Reservations> handle(GetReservationsByWorkerIdQuery query)
+            }
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class ReservationCommandServiceImpl {
+                    -ReservationRepository: reservationRepository
+                    --
+                    +Optional<Reservations> handle(CreateReservationCommand command)
+                    +Optional<Reservations> handle(UpdateReservationCommand command)
+                }
+            }
+            package QueryServices {
+                class ReservationsQueryServiceImpl {
+                    -ReservationRepository: reservationRepository
+                    --
+                    +List<Reservations> handle(GetAllReservationsQuery query)
+                    +Optional<Reservations> handle(GetReservationByIdQuery query)
+                    +List<Reservations> handle(GetReservationsByClientIdQuery query)
+                    +List<Reservations> handle(GetReservationsBySalonIdQuery query)
+                    +List<Reservations> handle(GetReservationsByWorkerIdQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class ReservationRepository <<Interface>> {}
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class ReservationController {
+                    -ReservationCommandService: reservationCommandService
+                    -ReservationsQueryService: reservationsQueryService
+                    --
+                    +ResponseEntity<ReservationResource>: createReservation()
+                    +ResponseEntity<ReservationResource>: updateReservation()
+                    +ResponseEntity<?>: getReservationsWithParameters()
+                    +ResponseEntity<ReservationResource>: getReservationById()
+                    +ResponseEntity<List<ReservationResource>>: getAllReservations()
+                }
+            }
+            package "Resources" {
+                class ReservationResource <<Record>> {}
+                class CreateReservationCommand <<Record>> {}
+                class UpdateReservationCommand <<Record>> {}
+            }
+            package "Assembler" {
+                class ReservationResourceFromEntityAssembler {
+                    +ReservationResource: toResourceFromEntity()
+                }
+                class CreateReservationCommandFromResourceAssembler {
+                    +CreateReservationCommand: toCommandFromResource()
+                }
+                class UpdateReservationCommandFromResourceAssembler {
+                    +UpdateReservationCommand: toCommandFromResource()
+                }
+            }
+        }
+    }
+}
+
+
+
+package "Shared" {
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class SnakeCasePhysicalNamingStrategy <<Class>>
+            }
+        }
+    }
+}
+
+package "Workers" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Workers {
+                    -id: long
+                    -name: String
+                    -specialization: String
+                    -photo_url: String
+                }
+            }
+            package "Commands" {
+                class CreateWorkerCommand <<Record>> {}
+                class UpdateWorkerCommand <<Record>> {}
+            }
+            package "Queries" {
+                class GetAllWorkersQuery <<Record>> {}
+                class GetWorkerByIdQuery <<Record>> {}
+                class GetWorkersBySalonIdQuery <<Record>> {}
+            }
+        }
+        package "Services" {
+            class WorkerCommandService <<Interface>> {
+                +Optional<Workers> handle(CreateWorkerCommand command)
+                +Optional<Workers> handle(UpdateWorkerCommand command)
+            }
+            class WorkersQueryService <<Interface>> {
+                +List<Workers> handle(GetAllWorkersQuery query)
+                +Optional<Workers> handle(GetWorkerByIdQuery query)
+                +List<Workers> handle(GetWorkersBySalonIdQuery query)
+            }
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class WorkerCommandServiceImpl {
+                    -WorkerRepository: workerRepository
+                    --
+                    +Optional<Workers> handle(CreateWorkerCommand command)
+                    +Optional<Workers> handle(UpdateWorkerCommand command)
+                }
+            }
+            package QueryServices {
+                class WorkersQueryServiceImpl {
+                    -WorkerRepository: workerRepository
+                    --
+                    +List<Workers> handle(GetAllWorkersQuery query)
+                    +Optional<Workers> handle(GetWorkerByIdQuery query)
+                    +List<Workers> handle(GetWorkersBySalonIdQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class WorkerRepository <<Interface>> {}
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class WorkerController {
+                    -WorkerCommandService: workerCommandService
+                    -WorkersQueryService: workersQueryService
+                    --
+                    +ResponseEntity<WorkerResource>: createWorker()
+                    +ResponseEntity<WorkerResource>: updateWorker()
+                    +ResponseEntity<?>: getWorkersWithParameters()
+                    +ResponseEntity<WorkerResource>: getWorkerById()
+                    +ResponseEntity<List<WorkerResource>>: getAllWorkers()
+                }
+            }
+            package "Resources" {
+                class WorkerResource <<Record>> {}
+                class CreateWorkerCommand <<Record>> {}
+                class UpdateWorkerCommand <<Record>> {}
+            }
+            package "Assembler" {
+                class WorkerResourceFromEntityAssembler {
+                    +WorkerResource: toResourceFromEntity()
+                }
+                class CreateWorkerCommandFromResourceAssembler {
+                    +CreateWorkerCommand: toCommandFromResource()
+                }
+                class UpdateWorkerCommandFromResourceAssembler {
+                    +UpdateWorkerCommand: toCommandFromResource()
+                }
+            }
+        }
+    }
+}
+
+
+@enduml
