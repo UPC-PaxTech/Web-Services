@@ -18,7 +18,7 @@ public class AccountCommandServiceImpl implements AccountCommandService {
 
     @Override
     public Optional<Account> handle(CreateAccountCommand command) {
-        if (accountRepository.existsByUsername(command.userName())){
+        if (accountRepository.existsByUser_name(command.userName())){
             throw new IllegalArgumentException("Account with same username already exists");
         }
 

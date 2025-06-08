@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
-    Optional<Account> findByUsername(String username);
+    Optional<Account> findByUser_name(String username);
 
-    boolean existsByUsername(String username);
+    boolean existsByUser_name(String username);
 
     List<Account> findByIsActive(Boolean isActive);
 }
