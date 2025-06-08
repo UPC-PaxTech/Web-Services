@@ -2,6 +2,7 @@ package com.paxtech.utime.platform.profiles.application.internal.commandservices
 
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.SalonProfile;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonProfileCommand;
+import com.paxtech.utime.platform.profiles.domain.model.commands.DeleteSalonProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.services.SalonProfileCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.SalonProfileQueryService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.SalonProfileRepository;
@@ -20,4 +21,6 @@ public class SalonProfileCommandServiceImpl implements SalonProfileCommandServic
         var createdSalonProfile = salonProfileRepository.save(salonProfile);
         return Optional.of(createdSalonProfile);
     }
+
+    /*Falta Update y delete*/
 }
