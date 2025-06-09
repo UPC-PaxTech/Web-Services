@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.controllers;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Clients;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllClientsQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientsByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ClientCommandService;
@@ -43,7 +43,7 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<ClientResource> createClient(@RequestBody CreateClientResource resource) {
-        Optional<Clients> client = clientCommandService.handle(CreateClientCommandFromResourceAssembler.toCommandFromResource(resource));
+        Optional<Client> client = clientCommandService.handle(CreateClientCommandFromResourceAssembler.toCommandFromResource(resource));
         return client.map(value -> new ResponseEntity<>(ClientResourceFrontEntityAssembler.toResourceFromEntity(value), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
@@ -75,16 +75,8 @@ public class ClientController {
             return getAllClients();
     }
 
-
-
-    private ResponseEntity<ClientResource> getClientById(Long id) {
-        Optional<Clients> client = clientsQueryService.handle(new GetClientsByIdQuery(id));
-        return client.map(value -> ResponseEntity.ok(ClientResourceFrontEntityAssembler.toResourceFromEntity(value)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
     private ResponseEntity<List<ClientResource>> getAllClients() {
-        List<Clients> clients = clientsQueryService.handle(new GetAllClientsQuery());
+        List<Client> clients = clientsQueryService.handle(new GetAllClientsQuery());
         if (clients.isEmpty()) return ResponseEntity.notFound().build();
         var resources = clients.stream()
                 .map(ClientResourceFrontEntityAssembler::toResourceFromEntity)

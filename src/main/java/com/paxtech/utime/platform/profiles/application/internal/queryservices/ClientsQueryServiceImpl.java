@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.application.internal.queryservices;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Clients;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllClientsQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientsByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ClientsQueryService;
@@ -23,12 +23,12 @@ public class ClientsQueryServiceImpl implements ClientsQueryService {
     }
 
     @Override
-    public List<Clients> handle(GetAllClientsQuery query) {
+    public List<Client> handle(GetAllClientsQuery query) {
         return clientRepository.findAll();
     }
 
     @Override
-    public Optional<Clients> handle(GetClientsByIdQuery query) {
+    public Optional<Client> handle(GetClientsByIdQuery query) {
         return clientRepository.findById(query.id());
     }
 

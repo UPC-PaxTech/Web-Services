@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.application.internal.commandservices;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Clients;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateClientCommand;
 import com.paxtech.utime.platform.profiles.domain.services.ClientCommandService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.ClientRepository;
@@ -17,9 +17,9 @@ public class ClientCommandServiceImpl implements ClientCommandService {
     }
 
     @Override
-    public Optional<Clients> handle(CreateClientCommand command) {
+    public Optional<Client> handle(CreateClientCommand command) {
 
-        var client = new Clients(command);
+        var client = new Client(command);
         var saved = clientRepository.save(client);
         return Optional.of(saved);
     }

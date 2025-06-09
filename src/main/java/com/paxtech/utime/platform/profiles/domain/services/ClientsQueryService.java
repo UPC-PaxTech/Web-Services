@@ -1,7 +1,7 @@
 package com.paxtech.utime.platform.profiles.domain.services;
 
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Clients;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.domain.model.queries.*;
 
 import java.util.List;
@@ -19,13 +19,13 @@ public interface ClientsQueryService {
      * @param query The query with no parameters.
      * @return List of salons.
      */
-    List<Clients> handle(GetAllClientsQuery query);
+    List<Client> handle(GetAllClientsQuery query);
 
     /**
      * Handle retrieving a salon by its ID.
      * @param query Query containing the salon ID.
      * @return Optional salon.
      */
-    Optional<Clients> handle(GetClientsByIdQuery query);
+    Optional<Client> handle(GetClientsByIdQuery query);
 
 }
