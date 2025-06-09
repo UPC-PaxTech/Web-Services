@@ -6,35 +6,31 @@ package "Profiles" {
         package "Model" {
             package "Aggregates" {
                 class Clients {
-                    -id: clientId
                     -birth_date: ClientBirthDate
                 }
                 class Salons {
-                    -id: SalonId
                     -salonProfilesId: SalonProfilesId
                     -imageUrl: SalonImageUrl
                     -location: SalonLocation
                 }
                 class Socials {
-                    -id: SocialId
                     -socialData: SocialData
                 }
                 class Salon_Profiles {
-                    -id: SalonProfilesId
                     -profileImageUrl: ProfileImageUrl
                     -coverImageUrl: CoverImageUrl
                 }
                 class Portfolio_Images {
-                    -id: PortfolioImageId
                     -salonId: SalonId
                     -imageUrl: ImageUrl
                 }
             }
-            package "Entities" {
+            package "Entity" {
                 class Accounts {
                     -passwordHash: PasswordHash
                     -is_active: IsActive
                     -fullName: FullName
+                    -companyName: CompanyName
                     -contact: Contact
                 }
             }
@@ -111,13 +107,48 @@ package "Profiles" {
                 class ImageUrl <<ValueObject>> {
                     -imageUrl: String
                 }
+                class CompanyName <<ValueObject>> {
+                    -companyName: String
+                }
             }
         }
         package "Services" {
-            class ClientCommandService <<Interface>>
-            class ClientsQueryService <<Interface>>
-            class SalonCommandService <<Interface>>
-            class SalonsQueryService <<Interface>>
+            class ClientCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateClientCommand command)
+            }
+            class ClientsQueryService <<Interface>> {
+                +List<Clients> handle(GetAllClientsQuery query)
+                +Optional<Clients> handle(GetClientsByIdQuery query)
+            }
+            class SalonCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSalonCommand command)
+            }
+            class SalonsQueryService <<Interface>> {
+                +List<Salons> handle(GetAllSalonsQuery query)
+                +Optional<Clients> handle(GetSalonsByIdQuery query)
+                +Optional<Clients> handle(GetClientsByEmailQuery query)
+            }
+            class SalonProfilesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSalonProfiles command)
+            }
+            class SalonProfilesQueryService <<Interface>> {
+                +List<Salon_Profiles> handle(GetAllSalonProfilesQuery query)
+                +Optional<Salon_Profiles> handle(GetSalonProfileByIdQuery query)
+            }
+            class PortfolioImagesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreatePortfolioImagesCommand command)
+            }
+            class PortfolioImagesQueryService <<Interface>> {
+                +List<Portfolio_Images> handle(GetAllPortfolioImagesQuery query)
+                +Optional<Portfolio_Images> handle(GetPortfolioImageByIdQuery query)
+            }
+            class SocialsCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateSocialsCommand command)
+            }
+            class SocialsQueryService <<Interface>> {
+                +List<Socials> handle(GetAllSocialsQuery query)
+                +Optional<Socials> handle(GetSocialByIdQuery query)
+            }
         }
     }
     package "Application" {
@@ -126,26 +157,31 @@ package "Profiles" {
                 class ClientCommandServiceImpl {
                     -ClientRepository: clientRepository
                     --
+                    +ClientCommandServiceImpl(ClientRepository clientRepository)
                     +Optional<Clients> handle (CreateClientCommand command)
                 }
                 class SalonCommandServiceImpl {
                     -SalonRepository: salonRepository
                     --
+                    +SalonCommandServiceImpl(SalonRepository salonRepository)
                     +Optional<Clients> handle (CreateSalonCommand command)
                 }
-                class CreateSalonProfilesCommandServiceImpl {
+                class SalonProfilesCommandServiceImpl {
                     -SalonRepository: salonRepository
                     --
+                    +SalonProfilesCommandServiceImpl(SalonRepository salonRepository)
                     +Optional<Clients> handle (CreateSalonProfiles command)
                 }
-                class CreatePortfolioImagesCommandServiceImpl {
+                class PortfolioImagesCommandServiceImpl {
                     -SalonRepository: salonRepository
                     --
+                    +PortfolioImagesCommandServiceImpl(SalonRepository salonRepository)
                     +Optional<Clients> handle (CreatePortfolioImagesCommand command)
                 }
-                class CreateSocialsCommandServiceImpl {
+                class SocialsCommandServiceImpl {
                     -SalonRepository: salonRepository
                     --
+                    +SocialsCommandServiceImpl(SalonRepository salonRepository)
                     +Optional<Clients> handle (CreateSocialsCommand command)
                 }
             }
@@ -169,8 +205,13 @@ package "Profiles" {
     package "Infrastructure" {
         package "Persistence" {
             package "jpa" {
-                class ClientRepository <<Interface>> {}
-                class SalonRepository <<Interface>> {}
+                class ClientRepository <<Interface>> {
+                    
+                }
+                class SalonRepository <<Interface>> {
+
+                }
+
             }
         }
     }
@@ -197,6 +238,36 @@ package "Profiles" {
                     +ResponseEntity<SalonResource>: getSalonById()
                     +ResponseEntity<SalonResource>: getSalonByEmail()
                     +ResponseEntity<List<SalonResource>>: getAllSalons()
+                }
+                class SalonProfilesController {
+                    -SalonProfilesCommandService: salonProfilesCommandService
+                    -SalonProfilesQueryService: salonProfilesQueryService
+                    --
+                    +ResponseEntity<SalonProfilesResource>: createSalonProfile()
+                    +ResponseEntity<SalonProfilesResource>: getSalonProfileByIdPath()
+                    +ResponseEntity<?>: getSalonProfileWithParameters()
+                    +ResponseEntity<SalonProfilesResource>: getSalonProfileById()
+                    +ResponseEntity<List<SalonProfilesResource>>: getAllSalonProfiles()
+                }
+                class PortfolioImagesController {
+                    -PortfolioImagesCommandService: portfolioImagesCommandService
+                    -PortfolioImagesQueryService: portfolioImagesQueryService
+                    --
+                    +ResponseEntity<PortfolioImagesResource>: createPortfolioImage()
+                    +ResponseEntity<PortfolioImagesResource>: getPortfolioImageByIdPath()
+                    +ResponseEntity<?>: getPortfolioImageWithParameters()
+                    +ResponseEntity<PortfolioImagesResource>: getPortfolioImageById()
+                    +ResponseEntity<List<PortfolioImagesResource>>: getAllPortfolioImages()
+                }
+                class SocialsController {
+                    -SocialsCommandService: socialsCommandService
+                    -SocialsQueryService: socialsQueryService
+                    --
+                    +ResponseEntity<SocialsResource>: createSocial()
+                    +ResponseEntity<SocialsResource>: getSocialByIdPath()
+                    +ResponseEntity<?>: getSocialWithParameters()
+                    +ResponseEntity<SocialsResource>: getSocialById()
+                    +ResponseEntity<List<SocialsResource>>: getAllSocials()
                 }
             }
             package "Resources" {
