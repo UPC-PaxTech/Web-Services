@@ -289,6 +289,24 @@ package "Profiles" {
                 class SalonResourceFromEntityAssembler {
                     +SalonResource: toResourceFromEntity()
                 }
+                class SalonProfilesResourceFromEntityAssembler {
+                    +SalonProfilesResource: toResourceFromEntity()
+                }
+                class CreateSalonProfilesCommandFromResourceAssembler {
+                    +CreateSalonProfilesCommand: toCommandFromResource()
+                }
+                class PortfolioImagesResourceFromEntityAssembler {
+                    +PortfolioImagesResource: toResourceFromEntity()
+                }
+                class CreatePortfolioImagesCommandFromResourceAssembler {
+                    +CreatePortfolioImagesCommand: toCommandFromResource()
+                }
+                class SocialsResourceFromEntityAssembler {
+                    +SocialsResource: toResourceFromEntity()
+                }
+                class CreateSocialsFromResourceAssembler {
+                    +CreateSocials: toCommandFromResource()
+                }
             }
         }
     }
@@ -299,14 +317,19 @@ package "Services" {
         package "Model" {
             package "Aggregates" {
                 class Services {
-                    -id: long
-                    -salon_id: long
-                    -name: String
-                    -duration: Integer
-                    -price: Double
-                    -status: Boolean
+                    -salonId: salonId
+                    -serviceDetails: 
+                    -servicename: ServiceName 
+                    -duration: Duration
+                    -price: Price
+                    -status: Status
                 }
             }
+
+            package "Entities" {
+
+            }
+
             package "Commands" {
                 class CreateServiceCommand <<Record>> {}
                 class UpdateServiceCommand <<Record>> {}
