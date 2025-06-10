@@ -34,4 +34,13 @@ public class Service extends AuditableAbstractAggregateRoot<Service> {
         this.status = new Status(command.status());
         this.salonId = new SalonId(command.salonId());
     }
+
+    public Service updateInformation(String newName, Integer newDuration, Long newPrice, boolean newStatus) {
+        this.name = new Name(newName);
+        this.duration = new Duration(newDuration);
+        this.price = new Price(newPrice);
+        this.status = new Status(newStatus);
+        return this;
+    }
+
 }
