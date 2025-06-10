@@ -1,14 +1,24 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.resources;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public record CreateClientResource(String name, Date passwordHash, String birth_date) {
+public record CreateClientResource(
+        String firstName,
+        String lastName,
+        String email,
+        String phone,
+        LocalDate birthDate
+) {
     public CreateClientResource {
-        if (passwordHash == null)
-            throw new IllegalArgumentException("Password hash cannot be null or empty");
-        if (name == null || name.isBlank())
-            throw new IllegalArgumentException("Name cannot be null or empty");
-        if (birth_date == null)
-            throw new IllegalArgumentException("Birth date cannot be null or empty");
+        if (firstName == null || firstName.isBlank())
+            throw new IllegalArgumentException("First name cannot be null or empty");
+        if (lastName == null || lastName.isBlank())
+            throw new IllegalArgumentException("Last name cannot be null or empty");
+        if (email == null || email.isBlank())
+            throw new IllegalArgumentException("Email cannot be null or empty");
+        if (phone == null || phone.isBlank())
+            throw new IllegalArgumentException("Phone cannot be null or empty");
+        if (birthDate == null)
+            throw new IllegalArgumentException("Birth date cannot be null");
     }
 }

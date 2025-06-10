@@ -1,10 +1,18 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.transform;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Clients;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ClientResource;
 
 public class ClientResourceFrontEntityAssembler {
-    public static ClientResource toResourceFromEntity(Clients entity) {
-        return new ClientResource(entity.getId(), entity.getName(), entity.getBirth_date(), entity.getPasswordHash(), entity.getIs_active());
+    public static ClientResource toResourceFromEntity(Client entity) {
+        return new ClientResource(
+                entity.getId(),
+                entity.getFirstName(),
+                entity.getLastName(),
+                entity.getFullName(),
+                entity.getBirthDate(),
+                entity.getPhone(),
+                entity.getEmail()
+        );
     }
 }
