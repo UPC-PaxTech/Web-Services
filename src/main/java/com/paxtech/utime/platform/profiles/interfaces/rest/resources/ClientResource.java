@@ -1,6 +1,13 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.resources;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-public record ClientResource(Long id, String name, Date birth_date, String passwordHash, Boolean is_active) {
-}
+public record ClientResource(
+        Long id,
+        String firstName,
+        String lastName,
+        String fullName,
+        LocalDate birthDate,
+        String phone,
+        String email
+) {}

@@ -1,10 +1,16 @@
-package com.paxtech.utime.platform.profiles.interfaces.rest.transform;
+    package com.paxtech.utime.platform.profiles.interfaces.rest.transform;
 
-import com.paxtech.utime.platform.profiles.domain.model.commands.CreateClientCommand;
-import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateClientResource;
+    import com.paxtech.utime.platform.profiles.domain.model.commands.CreateClientCommand;
+    import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateClientResource;
 
-public class CreateClientCommandFromResourceAssembler {
-    public static CreateClientCommand toCommandFromResource(CreateClientResource resource) {
-        return new CreateClientCommand(resource.name(), resource.birth_date(), resource.passwordHash());
+    public class CreateClientCommandFromResourceAssembler {
+        public static CreateClientCommand toCommandFromResource(CreateClientResource resource) {
+            return new CreateClientCommand(
+                    resource.firstName(),
+                    resource.lastName(),
+                    resource.email(),
+                    resource.phone(),
+                    resource.birthDate()
+            );
+        }
     }
-}

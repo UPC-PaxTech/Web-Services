@@ -1,5 +1,6 @@
 package com.paxtech.utime.platform.shared.domain.model.aggregates;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,16 +19,20 @@ import java.util.Date;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class AuditableAbstractAggregateRoot<T extends AbstractAggregateRoot<T>> extends AbstractAggregateRoot<T> {
+public abstract class AuditableAbstractAggregateRoot<T extends AbstractAggregateRoot<T>> extends AbstractAggregateRoot<T> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
+    @JsonIgnore // <-- Evita que Jackson intente serializar esto
     private Date createdAt;
+
     @LastModifiedDate
     @Column(nullable = false)
+    @JsonIgnore // <-- Evita que Jackson intente serializar esto
     private Date updatedAt;
 
     /**
