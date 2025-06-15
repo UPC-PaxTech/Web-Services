@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.application.internal.eventhandlers;
+package com.paxtech.utime.platform.iam.application.internal.eventhandlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

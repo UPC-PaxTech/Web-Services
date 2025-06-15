@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.infrastructure.tokens.jwt.services;
+package com.paxtech.utime.platform.iam.infrastructure.tokens.jwt.services;
 
 import com.paxtech.utime.platform.iam.infrastructure.tokens.jwt.BearerTokenService;
 import io.jsonwebtoken.*;

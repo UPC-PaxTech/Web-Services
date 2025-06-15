@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.domain.model.commands;
+package com.paxtech.utime.platform.iam.domain.model.commands;
 
 
 /**

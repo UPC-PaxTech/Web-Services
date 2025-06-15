@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.domain.model.aggregates;
+package com.paxtech.utime.platform.iam.domain.model.aggregates;
 
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
@@ -7,9 +7,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * User aggregate root
@@ -22,6 +19,10 @@ import java.util.Set;
 @Setter
 @Entity
 public class User extends AuditableAbstractAggregateRoot<User> {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @NotBlank
     @Size(max = 50)

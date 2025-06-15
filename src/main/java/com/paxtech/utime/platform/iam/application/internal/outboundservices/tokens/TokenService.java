@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.application.internal.outboundservices.tokens;
+package com.paxtech.utime.platform.iam.application.internal.outboundservices.tokens;
 
 /**
  * TokenService interface

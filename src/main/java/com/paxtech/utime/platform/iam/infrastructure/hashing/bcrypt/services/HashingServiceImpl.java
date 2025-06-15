@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.infrastructure.hashing.bcrypt.services;
+package com.paxtech.utime.platform.iam.infrastructure.hashing.bcrypt.services;
 
 import com.paxtech.utime.platform.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.application.internal.commandservices;
+package com.paxtech.utime.platform.iam.application.internal.commandservices;
 
 import com.paxtech.utime.platform.iam.application.internal.outboundservices.hashing.HashingService;
 import com.paxtech.utime.platform.iam.application.internal.outboundservices.tokens.TokenService;

@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.infrastructure.tokens.jwt;
+package com.paxtech.utime.platform.iam.infrastructure.tokens.jwt;
 
 import com.paxtech.utime.platform.iam.application.internal.outboundservices.tokens.TokenService;
 import jakarta.servlet.http.HttpServletRequest;

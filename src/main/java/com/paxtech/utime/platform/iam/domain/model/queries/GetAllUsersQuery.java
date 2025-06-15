@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.domain.model.queries;
+package com.paxtech.utime.platform.iam.domain.model.queries;
 
 /**
  * Get all users query

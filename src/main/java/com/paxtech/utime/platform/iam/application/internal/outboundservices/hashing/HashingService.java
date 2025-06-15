@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.application.internal.outboundservices.hashing;
+package com.paxtech.utime.platform.iam.application.internal.outboundservices.hashing;
 
 /**
  * HashingService interface

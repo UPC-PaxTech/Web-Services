@@ -1,4 +1,4 @@
-﻿package com.paxtech.utime.platform.iam.domain.services;
+package com.paxtech.utime.platform.iam.domain.services;
 
 import com.paxtech.utime.platform.iam.domain.model.aggregates.User;
 import com.paxtech.utime.platform.iam.domain.model.queries.GetAllUsersQuery;
