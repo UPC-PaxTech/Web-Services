@@ -21,9 +21,10 @@ public class SalonProfile extends AuditableAbstractAggregateRoot<SalonProfile> {
     @Embedded
     private CoverImage coverUrl;
 
-    public SalonProfile(String profileUrl, String coverUrl) {
+    public SalonProfile updateInformation(String profileUrl, String coverUrl) {
         this.profileUrl = new ProfileImage(profileUrl);
         this.coverUrl = new CoverImage(coverUrl);
+        return this;
     }
 
     public SalonProfile() {}
@@ -32,5 +33,7 @@ public class SalonProfile extends AuditableAbstractAggregateRoot<SalonProfile> {
         this.profileUrl = new ProfileImage(command.profileUrl());
         this.coverUrl = new CoverImage(command.coverUrl());
     }
+
+
 
 }

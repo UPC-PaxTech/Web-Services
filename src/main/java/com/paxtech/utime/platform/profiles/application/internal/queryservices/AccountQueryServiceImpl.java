@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.application.internal.queryservices;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Account;
+import com.paxtech.utime.platform.profiles.domain.model.entity.Account;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateAccountCommand;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAccountByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAccountByUserQuery;

@@ -12,5 +12,5 @@ public interface SalonProfileCommandService {
 
     Optional<SalonProfile> handle(UpdateSalonProfileCommand command);
 
-    Optional<SalonProfile> handle(DeleteSalonProfileCommand command);
+    void handle(DeleteSalonProfileCommand command);
 }

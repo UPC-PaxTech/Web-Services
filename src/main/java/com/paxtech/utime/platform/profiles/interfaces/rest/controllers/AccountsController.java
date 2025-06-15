@@ -1,5 +1,5 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.controllers;
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Account;
+import com.paxtech.utime.platform.profiles.domain.model.entity.Account;
 import com.paxtech.utime.platform.profiles.domain.services.AccountCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.AccountQueryService;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.AccountResource;
@@ -36,6 +36,7 @@ public class AccountsController {
         this.accountQueryService = accountQueryService;
     }
 
+
     @Operation(
             summary = "Create an account",
             description = "Creates an account with the provided password and username")
@@ -49,6 +50,5 @@ public class AccountsController {
 
         return account.map(a ->new ResponseEntity<>(AccountResourceFromEntityAssembler.toResourceFromEntity(a),CREATED)).orElseGet(() -> ResponseEntity.badRequest().build());
     }
-
 
 }

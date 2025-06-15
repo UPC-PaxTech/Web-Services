@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.transform;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Account;
+import com.paxtech.utime.platform.profiles.domain.model.entity.Account;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.AccountResource;
 
 public class AccountResourceFromEntityAssembler {
