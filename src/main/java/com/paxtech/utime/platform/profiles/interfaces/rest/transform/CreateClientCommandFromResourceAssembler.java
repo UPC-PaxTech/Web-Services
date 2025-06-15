@@ -8,9 +8,7 @@
             return new CreateClientCommand(
                     resource.firstName(),
                     resource.lastName(),
-                    resource.email(),
-                    resource.phone(),
-                    resource.birthDate()
+                    resource.userId()
             );
         }
     }

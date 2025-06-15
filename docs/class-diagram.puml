@@ -319,12 +319,28 @@ package "Services" {
                 class Services {
                     -salonId: salonId
                     -serviceDetails: 
-                    -servicename: ServiceName 
+                    -serviceName: ServiceName
                     -duration: Duration
-                    -price: Price
+                    -price: Money
                     -status: Status
                 }
             }
+
+            package "ValueObjects" {
+                class SalonId <<ValueObject>> {
+                    -id: long
+                }
+                class ServiceDetails <<ValueObject>>{
+                    -ServiceDetailsID: long
+                }
+                class ServiceName <<ValueObject>> {
+                    -serviceName: long
+                }
+                class Duration <<ValueObject>> {
+                    -duration: Int
+                }
+            }
+
 
             package "Entities" {
 
@@ -623,6 +639,21 @@ package "Shared" {
         package "Persistence" {
             package "jpa" {
                 class SnakeCasePhysicalNamingStrategy <<Class>>
+            }
+        }
+    }
+    package "Domain" {
+        package "Model" {
+            package "Entity" {
+                class Money {
+                    -money: Money
+                }
+            }
+            package "ValueObjects" {
+                class Money <<ValueObject>> {
+                    currency: string
+                    amount: long
+                }
             }
         }
     }
