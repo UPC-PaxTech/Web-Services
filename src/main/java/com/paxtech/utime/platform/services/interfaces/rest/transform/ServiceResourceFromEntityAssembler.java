@@ -10,7 +10,7 @@ public class ServiceResourceFromEntityAssembler {
                 entity.getName().name(),
                 entity.getDuration().duration(),
                 entity.getPrice().price(),
-                entity.getSalonId().SalonId()
+                entity.getSalonId().providerId()
         );
     }
 }

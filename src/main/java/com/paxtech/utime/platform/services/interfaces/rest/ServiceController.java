@@ -9,6 +9,9 @@ import com.paxtech.utime.platform.services.interfaces.rest.resources.CreateServi
 import com.paxtech.utime.platform.services.interfaces.rest.resources.ServiceResource;
 import com.paxtech.utime.platform.services.interfaces.rest.transform.CreateServiceCommandFromResourceAssembler;
 import com.paxtech.utime.platform.services.interfaces.rest.transform.ServiceResourceFromEntityAssembler;
+import com.paxtech.utime.platform.workers.domain.model.queries.GetWorkerByIdQuery;
+import com.paxtech.utime.platform.workers.interfaces.rest.resources.WorkerResource;
+import com.paxtech.utime.platform.workers.interfaces.rest.transform.WorkerResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -59,5 +62,6 @@ public class ServiceController {
                 .toList();
         return ResponseEntity.ok(serviceResources);
     }
+
 
 }
