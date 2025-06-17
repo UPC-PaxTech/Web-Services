@@ -1,15 +1,12 @@
 package com.paxtech.utime.platform.reservations.domain.model.aggregates;
 
+import com.paxtech.utime.platform.reservations.domain.model.commands.CreateReservationCommand;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "reservations")
 public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(nullable = false)
     private Long clientId;
@@ -21,25 +18,27 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
     private Long paymentId;
 
     @Column(nullable = false, length = 32)
-    private String timeSlotId;
+    private Long timeSlotId;
 
     @Column(nullable = false)
     private Long workerId;
 
     public Reservation() {}
 
-    public Reservation(Long clientId, Long providerId, Long paymentId, String timeSlotId, Long workerId) {
-        this.clientId = clientId;
-        this.providerId = providerId;
-        this.paymentId = paymentId;
-        this.timeSlotId = timeSlotId;
-        this.workerId = workerId;
+
+
+    public Reservation(CreateReservationCommand command){
+        this.clientId= command.clientId();
+        this.providerId= command.providerId();
+        this.paymentId= command.paymentId();
+        this.timeSlotId = command.timeSlotId();
+        this.workerId= command.workerId();
     }
 
-    public Long getId() { return id; }
+
     public Long getClientId() { return clientId; }
     public Long getProviderId() { return providerId; }
     public Long getPaymentId() { return paymentId; }
-    public String getTimeSlotId() { return timeSlotId; }
+    public Long getTimeSlotId() { return timeSlotId; }
     public Long getWorkerId() { return workerId; }
 }

@@ -16,7 +16,7 @@ public interface TokenService {
     /**
      * Extract the email from a token
      * @param token the token
-     * @return String the username
+     * @return String the email
      */
     String getEmailFromToken(String token);
 

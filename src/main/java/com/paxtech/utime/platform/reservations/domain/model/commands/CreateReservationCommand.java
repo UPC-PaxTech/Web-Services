@@ -4,6 +4,6 @@ public record CreateReservationCommand(
         Long clientId,
         Long providerId,
         Long paymentId,
-        String timeSlotId,
+        Long timeSlotId,
         Long workerId
 ) {}
