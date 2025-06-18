@@ -1,0 +1,121 @@
+@startuml
+package "Reservations" {
+    package "Domain" {
+        package "Model" {
+            package "Aggregates" {
+                class Reservations {
+                    -client_id: ClientId
+                    -service_id: ServiceId
+                    -provider_id: ProviderId
+                    -payment_id: PaymentId
+                    -time_slot_id: TimeSlotId
+                    -worker_id: WorkerId
+                }
+            }
+            package "ValueObjects" {
+                class ClientId <<ValueObject>> {
+                    -id: long
+                }
+                class ServiceId <<ValueObject>> {
+                    -id: long
+                }
+                class PaymentId <<ValueObject>> {
+                    -id: long
+                }
+                class TimeSlotId <<ValueObject>> {
+                    -id: long
+                }
+                class WorkerId <<ValueObject>> {
+                    -id: String
+                }
+            }
+            package "Commands" {
+                class CreateReservationCommand <<Record>> {}
+                class UpdateReservationCommand <<Record>> {}
+            }
+            package "Queries" {
+                class GetAllReservationsQuery <<Record>> {}
+                class GetReservationByIdQuery <<Record>> {}
+                class GetReservationsByClientIdQuery <<Record>> {}
+                class GetReservationsByProviderIdQuery <<Record>> {}
+            }
+        }
+        package "Services" {
+            class ReservationCommandService <<Interface>> {
+                +Optional<Reservations> handle(CreateReservationCommand command)
+                +Optional<Reservations> handle(UpdateReservationCommand command)
+            }
+            class ReservationsQueryService <<Interface>> {
+                +List<Reservations> handle(GetAllReservationsQuery query)
+                +Optional<Reservations> handle(GetReservationByIdQuery query)
+                +List<Reservations> handle(GetReservationsByClientIdQuery query)
+                +List<Reservations> handle(GetReservationsByProviderIdQuery query)
+                +List<Reservations> handle(GetReservationsByWorkerIdQuery query)
+            }
+        }
+    }
+    package "Application" {
+        package "Internal" {
+            package CommandServices {
+                class ReservationCommandServiceImpl {
+                    -ReservationRepository: reservationRepository
+                    --
+                    +Optional<Reservations> handle(CreateReservationCommand command)
+                    +Optional<Reservations> handle(UpdateReservationCommand command)
+                }
+            }
+            package QueryServices {
+                class ReservationsQueryServiceImpl {
+                    -ReservationRepository: reservationRepository
+                    --
+                    +List<Reservations> handle(GetAllReservationsQuery query)
+                    +Optional<Reservations> handle(GetReservationByIdQuery query)
+                    +List<Reservations> handle(GetReservationsByClientIdQuery query)
+                    +List<Reservations> handle(GetReservationsByProviderIdQuery query)
+                    +List<Reservations> handle(GetReservationsByWorkerIdQuery query)
+                }
+            }
+        }
+    }
+    package "Infrastructure" {
+        package "Persistence" {
+            package "jpa" {
+                class ReservationRepository <<Interface>> {}
+            }
+        }
+    }
+    package "Interfaces" {
+        package "Rest" {
+            package "Controllers" {
+                class ReservationController {
+                    -ReservationCommandService: reservationCommandService
+                    -ReservationsQueryService: reservationsQueryService
+                    --
+                    +ResponseEntity<ReservationResource>: createReservation()
+                    +ResponseEntity<ReservationResource>: updateReservation()
+                    +ResponseEntity<?>: getReservationsWithParameters()
+                    +ResponseEntity<ReservationResource>: getReservationById()
+                    +ResponseEntity<List<ReservationResource>>: getAllReservations()
+                }
+            }
+            package "Resources" {
+                class ReservationResource <<Record>> {}
+                class CreateReservationCommand <<Record>> {}
+                class UpdateReservationCommand <<Record>> {}
+            }
+            package "Assembler" {
+                class ReservationResourceFromEntityAssembler {
+                    +ReservationResource: toResourceFromEntity()
+                }
+                class CreateReservationCommandFromResourceAssembler {
+                    +CreateReservationCommand: toCommandFromResource()
+                }
+                class UpdateReservationCommandFromResourceAssembler {
+                    +UpdateReservationCommand: toCommandFromResource()
+                }
+            }
+        }
+    }
+}
+
+@enduml
