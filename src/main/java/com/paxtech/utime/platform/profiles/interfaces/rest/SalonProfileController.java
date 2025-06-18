@@ -21,8 +21,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value = "/api/v1/salon-profiles", produces = APPLICATION_JSON_VALUE)
-@Tag(name = "Salon Profiles", description = "Endpoints for Salon Profiles")
+@RequestMapping(value = "/api/v1/provider-profiles", produces = APPLICATION_JSON_VALUE)
+@Tag(name = "Provider Profiles", description = "Endpoints for Provider Profiles")
 public class SalonProfileController {
     private final SalonProfileCommandService salonProfileCommandService;
     private final SalonProfileQueryService salonProfileQueryService;
@@ -33,10 +33,10 @@ public class SalonProfileController {
     }
 
     @Operation(
-            summary = "Create a salon profile",
-            description = "Create a salon profile with cover and profile image")
+            summary = "Create a provider profile",
+            description = "Create a provider profile with cover and profile image")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Salon profile created"),
+            @ApiResponse(responseCode = "201", description = "Provider profile created"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
@@ -46,11 +46,11 @@ public class SalonProfileController {
     }
 
 
-    @Operation(summary = "Get a salon profile by Id",
-            description = "Gets a salon profile by the provided Id")
+    @Operation(summary = "Get a provider profile by Id",
+            description = "Gets a provider profile by the provided Id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Salon profile found"),
-            @ApiResponse(responseCode = "404", description = "Salon Profile not found")
+            @ApiResponse(responseCode = "200", description = "Provider profile found"),
+            @ApiResponse(responseCode = "404", description = "Provider Profile not found")
     })
     @GetMapping("{id}")
     public ResponseEntity<SalonProfileResource> getSalonProfileById(@PathVariable Long id) {
