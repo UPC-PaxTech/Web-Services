@@ -5,8 +5,10 @@ import com.paxtech.utime.platform.reservations.domain.model.valueobjects.Money;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
 import lombok.Getter;
 
+@Entity
 public class Payment extends AuditableAbstractAggregateRoot<Payment> {
 
     @Getter
