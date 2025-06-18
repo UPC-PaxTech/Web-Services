@@ -7,57 +7,56 @@ package "Profiles" {
             package "Aggregates" {
                 class Clients {
                     -birth_date: ClientBirthDate
+                    -fullName: FullName     
+                    -userId: UserId               
                 }
-                class Salons {
-                    -salonProfilesId: SalonProfilesId
-                    -imageUrl: SalonImageUrl
-                    -location: SalonLocation
+
+                class Providers {
+                    -providerProfilesId: ProviderProfilesId
+                    -imageUrl: ProviderImageUrl
+                    -location: ProviderLocation
                 }
+                
+                class Users <<AggregateRoot>> {
+                    email: Email
+                    password: Password
+                }
+
                 class Socials {
                     -socialData: SocialData
                 }
-                class Salon_Profiles {
+                class Provider_Profiles {
                     -profileImageUrl: ProfileImageUrl
                     -coverImageUrl: CoverImageUrl
                 }
                 class Portfolio_Images {
-                    -salonId: SalonId
+                    -providerId: ProviderId
                     -imageUrl: ImageUrl
                 }
             }
-            package "Entity" {
-                class Accounts {
-                    -passwordHash: PasswordHash
-                    -is_active: IsActive
-                    -fullName: FullName
-                    -companyName: CompanyName
-                    -contact: Contact
-                }
-            }
+
             package "Commands" {
                 class CreateClientCommand <<Record>>
-                class CreateSalonCommand <<Record>>
-                class CreateSalonProfiles <<Record>>
+                class CreateProviderCommand <<Record>>
+                class CreateProviderProfiles <<Record>>
                 class CreatePortfolioImagesCommand <<Record>>
                 class CreateSocialsCommand <<Record>>
             }
             package "Queries" {
                 class GetAllClientsQuery <<Record>>
-                class GetAllSalonsQuery <<Record>>
+                class GetAllProvidersQuery <<Record>>
                 class GetClientsByIdQuery <<Record>>
-                class GetSalonByEmailQuery <<Record>>
-                class GetSalonByIdQuery <<Record>>
+                class GetProviderByEmailQuery <<Record>>
+                class GetProviderByIdQuery <<Record>>
             }
             package "ValueObjects"{
-                class ClientId <<ValueObject>> {
+                class UserId <<ValueObject>> {
                     -id: long
                 }
-                class SalonId <<ValueObject>> {
+                class ProviderId <<ValueObject>> {
                     -id: long
                 }
-                class ClientBirthDate <<ValueObject>> {
-                    -date: LocalDate
-                }
+
                 class FullName <<ValueObject>> {
                     -firstName: String
                     -lastName: String
@@ -66,10 +65,10 @@ package "Profiles" {
                     +getFirstName(): String
                     +getLastName(): String
                 }
-                class SalonImageUrl <<ValueObject>> {
+                class ProviderImageUrl <<ValueObject>> {
                     -url: String
                 }
-                class SalonLocation <<ValueObject>> {
+                class ProviderLocation <<ValueObject>> {
                     -location: String
                 }
                 class Contact <<ValueObject>> {
@@ -79,9 +78,7 @@ package "Profiles" {
                 class PasswordHash <<ValueObject>> {
                     -passwordHash: String
                 }
-                class IsActive <<ValueObject>> {
-                    -is_Active: Boolean
-                }
+                
                 class SocialId <<ValueObject>> {
                     -id: long
                 }
@@ -92,8 +89,8 @@ package "Profiles" {
                     +getSocialUrl(): String
                     +getSocialIcon(): String
                 }
-                class SalonProfilesId <<ValueObject>> {
-                    -salonProfilesId: long
+                class ProviderProfilesId <<ValueObject>> {
+                    -providerProfilesId: long
                 }
                 class ProfileImageUrl <<ValueObject>> {
                     -profileImageUrl: String
@@ -120,20 +117,20 @@ package "Profiles" {
                 +List<Clients> handle(GetAllClientsQuery query)
                 +Optional<Clients> handle(GetClientsByIdQuery query)
             }
-            class SalonCommandService <<Interface>> {
-                +Optional<Clients> handle(CreateSalonCommand command)
+            class ProviderCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateProviderCommand command)
             }
-            class SalonsQueryService <<Interface>> {
-                +List<Salons> handle(GetAllSalonsQuery query)
-                +Optional<Clients> handle(GetSalonsByIdQuery query)
+            class ProvidersQueryService <<Interface>> {
+                +List<Providers> handle(GetAllProvidersQuery query)
+                +Optional<Clients> handle(GetProvidersByIdQuery query)
                 +Optional<Clients> handle(GetClientsByEmailQuery query)
             }
-            class SalonProfilesCommandService <<Interface>> {
-                +Optional<Clients> handle(CreateSalonProfiles command)
+            class ProviderProfilesCommandService <<Interface>> {
+                +Optional<Clients> handle(CreateProviderProfiles command)
             }
-            class SalonProfilesQueryService <<Interface>> {
-                +List<Salon_Profiles> handle(GetAllSalonProfilesQuery query)
-                +Optional<Salon_Profiles> handle(GetSalonProfileByIdQuery query)
+            class ProviderProfilesQueryService <<Interface>> {
+                +List<Provider_Profiles> handle(GetAllProviderProfilesQuery query)
+                +Optional<Provider_Profiles> handle(GetProviderProfileByIdQuery query)
             }
             class PortfolioImagesCommandService <<Interface>> {
                 +Optional<Clients> handle(CreatePortfolioImagesCommand command)
@@ -160,28 +157,28 @@ package "Profiles" {
                     +ClientCommandServiceImpl(ClientRepository clientRepository)
                     +Optional<Clients> handle (CreateClientCommand command)
                 }
-                class SalonCommandServiceImpl {
-                    -SalonRepository: salonRepository
+                class ProviderCommandServiceImpl {
+                    -ProviderRepository: providerRepository
                     --
-                    +SalonCommandServiceImpl(SalonRepository salonRepository)
-                    +Optional<Clients> handle (CreateSalonCommand command)
+                    +ProviderCommandServiceImpl(ProviderRepository providerRepository)
+                    +Optional<Clients> handle (CreateProviderCommand command)
                 }
-                class SalonProfilesCommandServiceImpl {
-                    -SalonRepository: salonRepository
+                class ProviderProfilesCommandServiceImpl {
+                    -ProviderRepository: providerRepository
                     --
-                    +SalonProfilesCommandServiceImpl(SalonRepository salonRepository)
-                    +Optional<Clients> handle (CreateSalonProfiles command)
+                    +ProviderProfilesCommandServiceImpl(ProviderRepository providerRepository)
+                    +Optional<Clients> handle (CreateProviderProfiles command)
                 }
                 class PortfolioImagesCommandServiceImpl {
-                    -SalonRepository: salonRepository
+                    -ProviderRepository: providerRepository
                     --
-                    +PortfolioImagesCommandServiceImpl(SalonRepository salonRepository)
+                    +PortfolioImagesCommandServiceImpl(ProviderRepository providerRepository)
                     +Optional<Clients> handle (CreatePortfolioImagesCommand command)
                 }
                 class SocialsCommandServiceImpl {
-                    -SalonRepository: salonRepository
+                    -ProviderRepository: providerRepository
                     --
-                    +SocialsCommandServiceImpl(SalonRepository salonRepository)
+                    +SocialsCommandServiceImpl(ProviderRepository providerRepository)
                     +Optional<Clients> handle (CreateSocialsCommand command)
                 }
             }
@@ -192,11 +189,11 @@ package "Profiles" {
                     +List<Clients> handle(GetAllClientsQuery query)
                     +Optional<Clients> handle(GetClientsByIdQuery query)
                 }
-                class SalonsQueryServiceImpl {
-                    -SalonRepository: salonRepository
+                class ProvidersQueryServiceImpl {
+                    -ProviderRepository: providerRepository
                     --
-                    +List<Salons> handle(GetAllSalonsQuery query)
-                    +Optional<Clients> handle(GetSalonsByIdQuery query)
+                    +List<Providers> handle(GetAllProvidersQuery query)
+                    +Optional<Clients> handle(GetProvidersByIdQuery query)
                     +Optional<Clients> handle(GetClientsByEmailQuery query)
                 }
             }
@@ -208,7 +205,7 @@ package "Profiles" {
                 class ClientRepository <<Interface>> {
                     
                 }
-                class SalonRepository <<Interface>> {
+                class ProviderRepository <<Interface>> {
 
                 }
 
@@ -228,26 +225,26 @@ package "Profiles" {
                     +ResponseEntity<ClientResource>: getClientById()
                     +ResponseEntity<List<ClientResource>>: getAllClients()
                 }
-                class SalonsController {
-                    -SalonsCommandService: salonRepository
-                    -SalonQueryService: salonQueryService
+                class ProvidersController {
+                    -ProvidersCommandService: providerRepository
+                    -ProviderQueryService: providerQueryService
                     --
-                    +ResponseEntity<SalonResource>: createSalon()
-                    +ResponseEntity<SalonResource>: getSalonByIdPath()
-                    +ResponseEntity<?>: getSalonWithParameters()
-                    +ResponseEntity<SalonResource>: getSalonById()
-                    +ResponseEntity<SalonResource>: getSalonByEmail()
-                    +ResponseEntity<List<SalonResource>>: getAllSalons()
+                    +ResponseEntity<ProviderResource>: createProvider()
+                    +ResponseEntity<ProviderResource>: getProviderByIdPath()
+                    +ResponseEntity<?>: getProviderWithParameters()
+                    +ResponseEntity<ProviderResource>: getProviderById()
+                    +ResponseEntity<ProviderResource>: getProviderByEmail()
+                    +ResponseEntity<List<ProviderResource>>: getAllProviders()
                 }
-                class SalonProfilesController {
-                    -SalonProfilesCommandService: salonProfilesCommandService
-                    -SalonProfilesQueryService: salonProfilesQueryService
+                class ProviderProfilesController {
+                    -ProviderProfilesCommandService: providerProfilesCommandService
+                    -ProviderProfilesQueryService: providerProfilesQueryService
                     --
-                    +ResponseEntity<SalonProfilesResource>: createSalonProfile()
-                    +ResponseEntity<SalonProfilesResource>: getSalonProfileByIdPath()
-                    +ResponseEntity<?>: getSalonProfileWithParameters()
-                    +ResponseEntity<SalonProfilesResource>: getSalonProfileById()
-                    +ResponseEntity<List<SalonProfilesResource>>: getAllSalonProfiles()
+                    +ResponseEntity<ProviderProfilesResource>: createProviderProfile()
+                    +ResponseEntity<ProviderProfilesResource>: getProviderProfileByIdPath()
+                    +ResponseEntity<?>: getProviderProfileWithParameters()
+                    +ResponseEntity<ProviderProfilesResource>: getProviderProfileById()
+                    +ResponseEntity<List<ProviderProfilesResource>>: getAllProviderProfiles()
                 }
                 class PortfolioImagesController {
                     -PortfolioImagesCommandService: portfolioImagesCommandService
@@ -273,8 +270,8 @@ package "Profiles" {
             package "Resources" {
                 class ClientResource <<Record>> {}
                 class CreateClientResource <<Record>> {}
-                class CreateSalonCommand <<Record>> {}
-                class SalonResource <<Record>> {}
+                class CreateProviderCommand <<Record>> {}
+                class ProviderResource <<Record>> {}
             }
             package "Assembler" {
                 class ClientResourceFrontEntityAssembler {
@@ -283,17 +280,17 @@ package "Profiles" {
                 class CreateClientCommandFromResourceAssembler {
                     +CreateClientCommand: toCommandFromResource()
                 }
-                class CreateSalonCommandFromResourceAssembler {
-                    +CreateSalonCommand: toCommandFromResource()
+                class CreateProviderCommandFromResourceAssembler {
+                    +CreateProviderCommand: toCommandFromResource()
                 }
-                class SalonResourceFromEntityAssembler {
-                    +SalonResource: toResourceFromEntity()
+                class ProviderResourceFromEntityAssembler {
+                    +ProviderResource: toResourceFromEntity()
                 }
-                class SalonProfilesResourceFromEntityAssembler {
-                    +SalonProfilesResource: toResourceFromEntity()
+                class ProviderProfilesResourceFromEntityAssembler {
+                    +ProviderProfilesResource: toResourceFromEntity()
                 }
-                class CreateSalonProfilesCommandFromResourceAssembler {
-                    +CreateSalonProfilesCommand: toCommandFromResource()
+                class CreateProviderProfilesCommandFromResourceAssembler {
+                    +CreateProviderProfilesCommand: toCommandFromResource()
                 }
                 class PortfolioImagesResourceFromEntityAssembler {
                     +PortfolioImagesResource: toResourceFromEntity()
@@ -317,8 +314,8 @@ package "Services" {
         package "Model" {
             package "Aggregates" {
                 class Services {
-                    -salonId: salonId
-                    -serviceDetails: 
+                    -providerId: providerId
+                    -serviceDetails: ServiceDetails
                     -serviceName: ServiceName
                     -duration: Duration
                     -price: Money
@@ -327,11 +324,11 @@ package "Services" {
             }
 
             package "ValueObjects" {
-                class SalonId <<ValueObject>> {
+                class ProviderId <<ValueObject>> {
                     -id: long
                 }
                 class ServiceDetails <<ValueObject>>{
-                    -ServiceDetailsID: long
+                    -serviceDetails: long
                 }
                 class ServiceName <<ValueObject>> {
                     -serviceName: long
@@ -339,11 +336,9 @@ package "Services" {
                 class Duration <<ValueObject>> {
                     -duration: Int
                 }
-            }
-
-
-            package "Entities" {
-
+                class Status <<ValueObject>> {
+                    -status: Boolean
+                }
             }
 
             package "Commands" {
@@ -353,7 +348,7 @@ package "Services" {
             package "Queries" {
                 class GetAllServicesQuery <<Record>> {}
                 class GetServiceByIdQuery <<Record>> {}
-                class GetServicesBySalonIdQuery <<Record>> {}
+                class GetServicesByProviderIdQuery <<Record>> {}
             }
         }
         package "Services" {
@@ -364,7 +359,13 @@ package "Services" {
             class ServicesQueryService <<Interface>> {
                 +List<Services> handle(GetAllServicesQuery query)
                 +Optional<Services> handle(GetServiceByIdQuery query)
-                +List<Services> handle(GetServicesBySalonIdQuery query)
+                +List<Services> handle(GetServicesByProviderIdQuery query)
+            }
+        }
+
+        package "Exeptions" {
+            class ProviderNotFoundException <<Exception>> {
+                +ProviderNotFoundException(providerId)
             }
         }
     }
@@ -384,7 +385,7 @@ package "Services" {
                     --
                     +List<Services> handle(GetAllServicesQuery query)
                     +Optional<Services> handle(GetServiceByIdQuery query)
-                    +List<Services> handle(GetServicesBySalonIdQuery query)
+                    +List<Services> handle(GetServicesByProviderIdQuery query)
                 }
             }
         }
@@ -435,14 +436,32 @@ package "Reviews" {
         package "Model" {
             package "Aggregates" {
                 class Reviews {
-                    -id: long
-                    -salon_id: long
-                    -client_id: long
-                    -rating: Integer
-                    -review: String
-                    -read: Boolean
+                    -provider_id: ProviderId
+                    -client_id: ClientId
+                    -review: Review
                 }
             }
+
+            package "ValueObjects" {
+                class ProviderId <<ValueObject>> {
+                    -id: long
+                }
+                class ClientId <<ValueObject>> {
+                    -id: long
+                }
+                class Review <<ValueObject>> {
+                    -review: String
+                    -rating: int
+                    -read: boolean
+                }
+            }
+
+            package "Exceptions" {
+                class ReviewNotFoundException <<Exception>> {
+                    +ReviewNotFoundException(reviewId)
+                }
+            }
+
             package "Commands" {
                 class CreateReviewCommand <<Record>> {}
                 class UpdateReviewCommand <<Record>> {}
@@ -450,7 +469,7 @@ package "Reviews" {
             package "Queries" {
                 class GetAllReviewsQuery <<Record>> {}
                 class GetReviewByIdQuery <<Record>> {}
-                class GetReviewsBySalonIdQuery <<Record>> {}
+                class GetReviewsByProviderIdQuery <<Record>> {}
                 class GetReviewsByClientIdQuery <<Record>> {}
             }
         }
@@ -462,7 +481,7 @@ package "Reviews" {
             class ReviewsQueryService <<Interface>> {
                 +List<Reviews> handle(GetAllReviewsQuery query)
                 +Optional<Reviews> handle(GetReviewByIdQuery query)
-                +List<Reviews> handle(GetReviewsBySalonIdQuery query)
+                +List<Reviews> handle(GetReviewsByProviderIdQuery query)
                 +List<Reviews> handle(GetReviewsByClientIdQuery query)
             }
         }
@@ -483,7 +502,7 @@ package "Reviews" {
                     --
                     +List<Reviews> handle(GetAllReviewsQuery query)
                     +Optional<Reviews> handle(GetReviewByIdQuery query)
-                    +List<Reviews> handle(GetReviewsBySalonIdQuery query)
+                    +List<Reviews> handle(GetReviewsByProviderIdQuery query)
                     +List<Reviews> handle(GetReviewsByClientIdQuery query)
                 }
             }
@@ -527,6 +546,9 @@ package "Reviews" {
                 }
             }
         }
+        package "acl" {
+            class ReviewsContextFacadeImpl {}
+        }
     }
 }
 
@@ -535,12 +557,29 @@ package "Reservations" {
         package "Model" {
             package "Aggregates" {
                 class Reservations {
+                    -client_id: ClientId
+                    -service_id: ServiceId
+                    -provider_id: ProviderId
+                    -payment_id: PaymentId
+                    -time_slot_id: TimeSlotId
+                    -worker_id: WorkerId
+                }
+            }
+            package "ValueObjects" {
+                class ClientId <<ValueObject>> {
                     -id: long
-                    -client_id: long
-                    -salon_id: long
-                    -payment_id: long
-                    -time_slot_id: long
-                    -worker_id: String
+                }
+                class ServiceId <<ValueObject>> {
+                    -id: long
+                }
+                class PaymentId <<ValueObject>> {
+                    -id: long
+                }
+                class TimeSlotId <<ValueObject>> {
+                    -id: long
+                }
+                class WorkerId <<ValueObject>> {
+                    -id: String
                 }
             }
             package "Commands" {
@@ -551,7 +590,7 @@ package "Reservations" {
                 class GetAllReservationsQuery <<Record>> {}
                 class GetReservationByIdQuery <<Record>> {}
                 class GetReservationsByClientIdQuery <<Record>> {}
-                class GetReservationsBySalonIdQuery <<Record>> {}
+                class GetReservationsByProviderIdQuery <<Record>> {}
             }
         }
         package "Services" {
@@ -563,7 +602,7 @@ package "Reservations" {
                 +List<Reservations> handle(GetAllReservationsQuery query)
                 +Optional<Reservations> handle(GetReservationByIdQuery query)
                 +List<Reservations> handle(GetReservationsByClientIdQuery query)
-                +List<Reservations> handle(GetReservationsBySalonIdQuery query)
+                +List<Reservations> handle(GetReservationsByProviderIdQuery query)
                 +List<Reservations> handle(GetReservationsByWorkerIdQuery query)
             }
         }
@@ -585,7 +624,7 @@ package "Reservations" {
                     +List<Reservations> handle(GetAllReservationsQuery query)
                     +Optional<Reservations> handle(GetReservationByIdQuery query)
                     +List<Reservations> handle(GetReservationsByClientIdQuery query)
-                    +List<Reservations> handle(GetReservationsBySalonIdQuery query)
+                    +List<Reservations> handle(GetReservationsByProviderIdQuery query)
                     +List<Reservations> handle(GetReservationsByWorkerIdQuery query)
                 }
             }
@@ -664,9 +703,19 @@ package "Workers" {
         package "Model" {
             package "Aggregates" {
                 class Workers {
-                    -id: long
+                    -name: WorkerName
+                    -specialization: WorkerSpecialization
+                    -photo_url: WorkerPhotoUrl
+                }
+            }
+            package "ValueObjects" {
+                class WorkerName <<ValueObject>> {
                     -name: String
+                }
+                class WorkerSpecialization <<ValueObject>> {
                     -specialization: String
+                }
+                class WorkerPhotoUrl <<ValueObject>> {
                     -photo_url: String
                 }
             }
@@ -677,7 +726,7 @@ package "Workers" {
             package "Queries" {
                 class GetAllWorkersQuery <<Record>> {}
                 class GetWorkerByIdQuery <<Record>> {}
-                class GetWorkersBySalonIdQuery <<Record>> {}
+                class GetWorkersByProviderIdQuery <<Record>> {}
             }
         }
         package "Services" {
@@ -688,7 +737,7 @@ package "Workers" {
             class WorkersQueryService <<Interface>> {
                 +List<Workers> handle(GetAllWorkersQuery query)
                 +Optional<Workers> handle(GetWorkerByIdQuery query)
-                +List<Workers> handle(GetWorkersBySalonIdQuery query)
+                +List<Workers> handle(GetWorkersByProviderIdQuery query)
             }
         }
     }
@@ -708,7 +757,7 @@ package "Workers" {
                     --
                     +List<Workers> handle(GetAllWorkersQuery query)
                     +Optional<Workers> handle(GetWorkerByIdQuery query)
-                    +List<Workers> handle(GetWorkersBySalonIdQuery query)
+                    +List<Workers> handle(GetWorkersByProviderIdQuery query)
                 }
             }
         }

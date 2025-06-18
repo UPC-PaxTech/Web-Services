@@ -43,5 +43,5 @@ public class Service extends AuditableAbstractAggregateRoot<Service> {
         this.status = new Status(newStatus);
         return this;
     }
-
+    // ADD SERVICE "DESCRIPTION" AND CHANGE PRICE VALUE OBJECT TO MONEY VALUE OBJECT 
 }
