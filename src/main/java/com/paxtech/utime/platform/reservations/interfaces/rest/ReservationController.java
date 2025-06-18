@@ -6,12 +6,14 @@ import com.paxtech.utime.platform.reservations.domain.model.queries.GetAllReserv
 import com.paxtech.utime.platform.reservations.domain.model.queries.GetReservationByIdQuery;
 import com.paxtech.utime.platform.reservations.domain.services.ReservationCommandService;
 import com.paxtech.utime.platform.reservations.domain.services.ReservationQueryService;
+import com.paxtech.utime.platform.reservations.domain.services.TimeSlotQueryService;
 import com.paxtech.utime.platform.reservations.interfaces.rest.resources.CreateReservationResource;
 import com.paxtech.utime.platform.reservations.interfaces.rest.resources.ReservationDetailsResource;
 import com.paxtech.utime.platform.reservations.interfaces.rest.resources.ReservationResource;
 import com.paxtech.utime.platform.reservations.interfaces.rest.transform.CreateReservationCommandFromResourceAssembler;
 import com.paxtech.utime.platform.reservations.interfaces.rest.transform.ReservationDetailsResourceFromEntityAssembler;
 import com.paxtech.utime.platform.reservations.interfaces.rest.transform.ReservationResourceFromEntityAssembler;
+import com.paxtech.utime.platform.workers.interfaces.rest.acl.WorkerContextFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,6 +35,8 @@ public class ReservationController {
     private final ReservationCommandService reservationCommandService;
     private final ReservationQueryService reservationQueryService;
     private final ProviderContextFacade providerContextFacade;
+    private final TimeSlotQueryService timeSlotQueryService;
+    private final WorkerContextFacade workerContextFacade;
 
     /**
      * Constructor
@@ -40,10 +44,12 @@ public class ReservationController {
      * @param reservationQueryService The {@link ReservationQueryService} instance
      */
     public ReservationController(ReservationCommandService reservationCommandService,
-                                 ReservationQueryService reservationQueryService, ProviderContextFacade providerContextFacade) {
+                                 ReservationQueryService reservationQueryService, ProviderContextFacade providerContextFacade, TimeSlotQueryService timeSlotQueryService, WorkerContextFacade workerContextFacade) {
         this.reservationCommandService = reservationCommandService;
         this.reservationQueryService = reservationQueryService;
         this.providerContextFacade = providerContextFacade;
+        this.timeSlotQueryService = timeSlotQueryService;
+        this.workerContextFacade = workerContextFacade;
     }
 
     /**
@@ -116,7 +122,9 @@ public class ReservationController {
 
         var detailsResource = ReservationDetailsResourceFromEntityAssembler.toResourceFromEntity(
                 reservation.get(),
-                providerContextFacade
+                providerContextFacade,
+                timeSlotQueryService,
+                workerContextFacade
         );
 
         return ResponseEntity.ok(detailsResource);
