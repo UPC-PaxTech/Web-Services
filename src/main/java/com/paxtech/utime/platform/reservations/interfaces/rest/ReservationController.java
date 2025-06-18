@@ -4,6 +4,7 @@ import com.paxtech.utime.platform.profiles.interfaces.acl.ProviderContextFacade;
 import com.paxtech.utime.platform.reservations.domain.model.commands.CreateReservationCommand;
 import com.paxtech.utime.platform.reservations.domain.model.queries.GetAllReservationsQuery;
 import com.paxtech.utime.platform.reservations.domain.model.queries.GetReservationByIdQuery;
+import com.paxtech.utime.platform.reservations.domain.services.PaymentQueryService;
 import com.paxtech.utime.platform.reservations.domain.services.ReservationCommandService;
 import com.paxtech.utime.platform.reservations.domain.services.ReservationQueryService;
 import com.paxtech.utime.platform.reservations.domain.services.TimeSlotQueryService;
@@ -37,6 +38,7 @@ public class ReservationController {
     private final ProviderContextFacade providerContextFacade;
     private final TimeSlotQueryService timeSlotQueryService;
     private final WorkerContextFacade workerContextFacade;
+    private final PaymentQueryService paymentQueryService;
 
     /**
      * Constructor
@@ -44,12 +46,13 @@ public class ReservationController {
      * @param reservationQueryService The {@link ReservationQueryService} instance
      */
     public ReservationController(ReservationCommandService reservationCommandService,
-                                 ReservationQueryService reservationQueryService, ProviderContextFacade providerContextFacade, TimeSlotQueryService timeSlotQueryService, WorkerContextFacade workerContextFacade) {
+                                 ReservationQueryService reservationQueryService, ProviderContextFacade providerContextFacade, TimeSlotQueryService timeSlotQueryService, WorkerContextFacade workerContextFacade, PaymentQueryService paymentQueryService) {
         this.reservationCommandService = reservationCommandService;
         this.reservationQueryService = reservationQueryService;
         this.providerContextFacade = providerContextFacade;
         this.timeSlotQueryService = timeSlotQueryService;
         this.workerContextFacade = workerContextFacade;
+        this.paymentQueryService = paymentQueryService;
     }
 
     /**
@@ -124,7 +127,8 @@ public class ReservationController {
                 reservation.get(),
                 providerContextFacade,
                 timeSlotQueryService,
-                workerContextFacade
+                workerContextFacade,
+                paymentQueryService
         );
 
         return ResponseEntity.ok(detailsResource);
