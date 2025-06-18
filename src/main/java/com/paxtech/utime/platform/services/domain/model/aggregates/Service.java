@@ -16,6 +16,7 @@ public class Service extends AuditableAbstractAggregateRoot<Service> {
     @Embedded @Getter
     Duration duration;
 
+
     @Embedded @Getter
     Price price;
 

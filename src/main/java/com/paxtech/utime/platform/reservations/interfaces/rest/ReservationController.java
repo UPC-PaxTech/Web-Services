@@ -1,13 +1,16 @@
 package com.paxtech.utime.platform.reservations.interfaces.rest;
 
+import com.paxtech.utime.platform.profiles.interfaces.acl.ProviderContextFacade;
 import com.paxtech.utime.platform.reservations.domain.model.commands.CreateReservationCommand;
 import com.paxtech.utime.platform.reservations.domain.model.queries.GetAllReservationsQuery;
 import com.paxtech.utime.platform.reservations.domain.model.queries.GetReservationByIdQuery;
 import com.paxtech.utime.platform.reservations.domain.services.ReservationCommandService;
 import com.paxtech.utime.platform.reservations.domain.services.ReservationQueryService;
 import com.paxtech.utime.platform.reservations.interfaces.rest.resources.CreateReservationResource;
+import com.paxtech.utime.platform.reservations.interfaces.rest.resources.ReservationDetailsResource;
 import com.paxtech.utime.platform.reservations.interfaces.rest.resources.ReservationResource;
 import com.paxtech.utime.platform.reservations.interfaces.rest.transform.CreateReservationCommandFromResourceAssembler;
+import com.paxtech.utime.platform.reservations.interfaces.rest.transform.ReservationDetailsResourceFromEntityAssembler;
 import com.paxtech.utime.platform.reservations.interfaces.rest.transform.ReservationResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,6 +32,7 @@ import java.util.List;
 public class ReservationController {
     private final ReservationCommandService reservationCommandService;
     private final ReservationQueryService reservationQueryService;
+    private final ProviderContextFacade providerContextFacade;
 
     /**
      * Constructor
@@ -36,9 +40,10 @@ public class ReservationController {
      * @param reservationQueryService The {@link ReservationQueryService} instance
      */
     public ReservationController(ReservationCommandService reservationCommandService,
-                                 ReservationQueryService reservationQueryService) {
+                                 ReservationQueryService reservationQueryService, ProviderContextFacade providerContextFacade) {
         this.reservationCommandService = reservationCommandService;
         this.reservationQueryService = reservationQueryService;
+        this.providerContextFacade = providerContextFacade;
     }
 
     /**
@@ -95,4 +100,26 @@ public class ReservationController {
                 .toList();
         return ResponseEntity.ok(resources);
     }
+
+    @GetMapping("/{reservationId}/details")
+    @Operation(summary = "Get detailed reservation information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reservation details found"),
+            @ApiResponse(responseCode = "404", description = "Reservation not found")})
+    public ResponseEntity<ReservationDetailsResource> getReservationDetails(@PathVariable Long reservationId) {
+        var query = new GetReservationByIdQuery(reservationId);
+        var reservation = reservationQueryService.handle(query);
+
+        if (reservation.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var detailsResource = ReservationDetailsResourceFromEntityAssembler.toResourceFromEntity(
+                reservation.get(),
+                providerContextFacade
+        );
+
+        return ResponseEntity.ok(detailsResource);
+    }
 }
+

@@ -1,8 +1,12 @@
 package com.paxtech.utime.platform.reservations.domain.model.aggregates;
 
 import com.paxtech.utime.platform.reservations.domain.model.commands.CreateReservationCommand;
+import com.paxtech.utime.platform.services.domain.model.aggregates.Service;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
@@ -34,6 +38,7 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
         this.timeSlotId = command.timeSlotId();
         this.workerId= command.workerId();
     }
+
 
 
     public Long getClientId() { return clientId; }
