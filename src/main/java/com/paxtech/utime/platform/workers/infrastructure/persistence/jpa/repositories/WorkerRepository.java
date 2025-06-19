@@ -15,4 +15,7 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
 
     boolean existsByNameAndProviderId(WorkerName name, ProviderId providerId);
 
+    boolean existsByIdIsNot(Long id);
+
+    Long id(Long id);
 }

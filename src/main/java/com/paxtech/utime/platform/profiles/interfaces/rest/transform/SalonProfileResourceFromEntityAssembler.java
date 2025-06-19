@@ -1,10 +1,10 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.transform;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.SalonProfile;
-import com.paxtech.utime.platform.profiles.interfaces.rest.resources.SalonProfileResource;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.ProviderProfile;
+import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ProviderProfileResource;
 
 public class SalonProfileResourceFromEntityAssembler {
-    public static SalonProfileResource toResourcefromEntity(SalonProfile entity) {
-        return new SalonProfileResource(entity.getId(), entity.getCoverUrl().getUrl(), entity.getCoverUrl().getUrl() );
+    public static ProviderProfileResource toResourceFromEntity(ProviderProfile entity) {
+        return new ProviderProfileResource(entity.getId(), entity.getCoverUrl().getUrl(), entity.getCoverUrl().getUrl(), entity.getProviderId() );
     }
 }

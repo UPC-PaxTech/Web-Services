@@ -1,17 +1,16 @@
 package com.paxtech.utime.platform.profiles.domain.model.aggregates;
 
-import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSalonProfileCommand;
+import com.paxtech.utime.platform.profiles.domain.model.commands.CreateProviderProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.CoverImage;
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.ProfileImage;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
 import lombok.Getter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-public class SalonProfile extends AuditableAbstractAggregateRoot<SalonProfile> {
+public class ProviderProfile extends AuditableAbstractAggregateRoot<ProviderProfile> {
 
     @Getter
     @Embedded
@@ -21,15 +20,21 @@ public class SalonProfile extends AuditableAbstractAggregateRoot<SalonProfile> {
     @Embedded
     private CoverImage coverUrl;
 
-    public SalonProfile updateInformation(String profileUrl, String coverUrl) {
+    @Getter
+    @Column(nullable = false)
+    private Long ProviderId;
+
+
+
+    public ProviderProfile updateInformation(String profileUrl, String coverUrl) {
         this.profileUrl = new ProfileImage(profileUrl);
         this.coverUrl = new CoverImage(coverUrl);
         return this;
     }
 
-    public SalonProfile() {}
+    public ProviderProfile() {}
 
-    public SalonProfile(CreateSalonProfileCommand command){
+    public ProviderProfile(CreateProviderProfileCommand command){
         this.profileUrl = new ProfileImage(command.profileUrl());
         this.coverUrl = new CoverImage(command.coverUrl());
     }

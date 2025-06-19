@@ -1,11 +1,11 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.SalonProfile;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.ProviderProfile;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSalonProfileByIdQuery;
-import com.paxtech.utime.platform.profiles.domain.services.SalonProfileCommandService;
-import com.paxtech.utime.platform.profiles.domain.services.SalonProfileQueryService;
-import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateSalonProfileResource;
-import com.paxtech.utime.platform.profiles.interfaces.rest.resources.SalonProfileResource;
+import com.paxtech.utime.platform.profiles.domain.services.ProviderProfileCommandService;
+import com.paxtech.utime.platform.profiles.domain.services.ProviderProfileQueryService;
+import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateProviderProfileResource;
+import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ProviderProfileResource;
 import com.paxtech.utime.platform.profiles.interfaces.rest.transform.CreateSalonProfileCommandFromResourceAssembler;
 import com.paxtech.utime.platform.profiles.interfaces.rest.transform.SalonProfileResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,19 +28,19 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/api/v1/provider-profiles", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "Provider Profiles", description = "Endpoints for Provider Profiles")
-public class SalonProfileController {
-
-    private final SalonProfileCommandService salonProfileCommandService;
-    private final SalonProfileQueryService salonProfileQueryService;
+public class ProviderProfileController {
+    private final ProviderProfileCommandService providerProfileCommandService;
+    private final ProviderProfileQueryService providerProfileQueryService;
 
     /**
      * Constructor
      * @param salonProfileCommandService Service to handle commands related to provider profiles
      * @param salonProfileQueryService Service to handle queries related to provider profiles
      */
-    public SalonProfileController(SalonProfileCommandService salonProfileCommandService, SalonProfileQueryService salonProfileQueryService) {
-        this.salonProfileCommandService = salonProfileCommandService;
-        this.salonProfileQueryService = salonProfileQueryService;
+
+    public ProviderProfileController(ProviderProfileCommandService providerProfileCommandService, ProviderProfileQueryService providerProfileQueryService) {
+        this.providerProfileCommandService = providerProfileCommandService;
+        this.providerProfileQueryService = providerProfileQueryService;
     }
 
     /**
@@ -56,35 +56,21 @@ public class SalonProfileController {
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @PostMapping
-    public ResponseEntity<SalonProfileResource> createSalonProfile(@RequestBody CreateSalonProfileResource resource) {
-        Optional<SalonProfile> salonProfile = salonProfileCommandService.handle(
-                CreateSalonProfileCommandFromResourceAssembler.toCommandFromResource(resource));
-
-        return salonProfile
-                .map(profile -> new ResponseEntity<>(
-                        SalonProfileResourceFromEntityAssembler.toResourcefromEntity(profile), CREATED))
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+    public ResponseEntity<ProviderProfileResource> createSalonProfile(@RequestBody CreateProviderProfileResource resource) {
+        Optional<ProviderProfile> salonProfile = providerProfileCommandService.handle(CreateSalonProfileCommandFromResourceAssembler.toCommandFromResource(resource));
+        return salonProfile.map(s-> new ResponseEntity<>(SalonProfileResourceFromEntityAssembler.toResourceFromEntity(s), CREATED)).orElseGet(()->ResponseEntity.badRequest().build());
     }
 
-    /**
-     * Retrieves a provider profile by its ID.
-     * @param id The ID of the provider profile
-     * @return A {@link SalonProfileResource} if found, or 404 Not Found if it does not exist
-     */
-    @Operation(
-            summary = "Get a provider profile by Id",
+    @Operation(summary = "Get a provider profile by Id",
             description = "Gets a provider profile by the provided Id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Provider profile found"),
             @ApiResponse(responseCode = "404", description = "Provider profile not found")
     })
-    @GetMapping("{id}")
-    public ResponseEntity<SalonProfileResource> getSalonProfileById(@PathVariable Long id) {
-        Optional<SalonProfile> salonProfile = salonProfileQueryService.handle(new GetSalonProfileByIdQuery(id));
 
-        return salonProfile
-                .map(profile -> ResponseEntity.ok(
-                        SalonProfileResourceFromEntityAssembler.toResourcefromEntity(profile)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("{id}")
+    public ResponseEntity<ProviderProfileResource> getSalonProfileById(@PathVariable Long id) {
+        Optional<ProviderProfile> salonProfile = providerProfileQueryService.handle(new GetSalonProfileByIdQuery(id));
+        return salonProfile.map(s->ResponseEntity.ok(SalonProfileResourceFromEntityAssembler.toResourceFromEntity(s))).orElseGet(()->ResponseEntity.notFound().build());
     }
 }
