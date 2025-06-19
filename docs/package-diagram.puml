@@ -8,6 +8,7 @@ package "Profiles" {
             package "Aggregates" {}
             package "Commands" {}
             package "Queries" {}
+            package "ValueObjects" {}
         }
         package "Services" {}
     }
@@ -32,6 +33,7 @@ package "Services" {
             package "Aggregates" {}
             package "Commands" {}
             package "Queries" {}
+            package "ValueObjects" {}
         }
         package "Services" {}
     }
@@ -56,6 +58,7 @@ package "Reviews" {
             package "Aggregates" {}
             package "Commands" {}
             package "Queries" {}
+            package "ValueObjects" {}
         }
         package "Services" {}
     }
@@ -80,6 +83,7 @@ package "Reservations" {
             package "Aggregates" {}
             package "Commands" {}
             package "Queries" {}
+            package "ValueObjects" {}
         }
         package "Services" {}
     }
@@ -104,6 +108,7 @@ package "Workers" {
             package "Aggregates" {}
             package "Commands" {}
             package "Queries" {}
+            package "ValueObjects" {}
         }
         package "Services" {}
     }
@@ -136,6 +141,7 @@ package org.hibernate.boot.model {
 
 ' === RELACIONES DE PROFILES ===
 Profiles.Domain.Model.Aggregates ..> org.springframework.data.domain
+Profiles.Domain.Model.Aggregates ..> Profiles.Domain.Model.ValueObjects
 Profiles.Application.Internal.CommandServices ..> Profiles.Domain.Services
 Profiles.Application.Internal.CommandServices ..> Profiles.Infrastructure.Persistence.JPA
 Profiles.Application.Internal.CommandServices ..> Profiles.Domain.Model.Commands
@@ -153,6 +159,7 @@ Profiles.Interfaces.Rest.Controllers ..> Profiles.Application.Internal.QueryServ
 
 ' === RELACIONES DE SERVICES ===
 Services.Domain.Model.Aggregates ..> org.springframework.data.domain
+Services.Domain.Model.Aggregates ..> Services.Domain.Model.ValueObjects
 Services.Application.Internal.CommandServices ..> Services.Domain.Services
 Services.Application.Internal.CommandServices ..> Services.Infrastructure.Persistence.JPA
 Services.Application.Internal.CommandServices ..> Services.Domain.Model.Commands
@@ -170,6 +177,7 @@ Services.Interfaces.Rest.Controllers ..> Services.Application.Internal.QueryServ
 
 ' === RELACIONES DE REVIEWS ===
 Reviews.Domain.Model.Aggregates ..> org.springframework.data.domain
+Reviews.Domain.Model.Aggregates ..> Reviews.Domain.Model.ValueObjects
 Reviews.Application.Internal.CommandServices ..> Reviews.Domain.Services
 Reviews.Application.Internal.CommandServices ..> Reviews.Infrastructure.Persistence.JPA
 Reviews.Application.Internal.CommandServices ..> Reviews.Domain.Model.Commands
@@ -187,6 +195,7 @@ Reviews.Interfaces.Rest.Controllers ..> Reviews.Application.Internal.QueryServic
 
 ' === RELACIONES DE RESERVATIONS ===
 Reservations.Domain.Model.Aggregates ..> org.springframework.data.domain
+Reservations.Domain.Model.Aggregates ..> Reservations.Domain.Model.ValueObjects
 Reservations.Application.Internal.CommandServices ..> Reservations.Domain.Services
 Reservations.Application.Internal.CommandServices ..> Reservations.Infrastructure.Persistence.JPA
 Reservations.Application.Internal.CommandServices ..> Reservations.Domain.Model.Commands
@@ -204,6 +213,7 @@ Reservations.Interfaces.Rest.Controllers ..> Reservations.Application.Internal.Q
 
 ' === RELACIONES DE WORKERS ===
 Workers.Domain.Model.Aggregates ..> org.springframework.data.domain
+Workers.Domain.Model.Aggregates ..> Workers.Domain.Model.ValueObjects
 Workers.Application.Internal.CommandServices ..> Workers.Domain.Services
 Workers.Application.Internal.CommandServices ..> Workers.Infrastructure.Persistence.JPA
 Workers.Application.Internal.CommandServices ..> Workers.Domain.Model.Commands
