@@ -127,7 +127,6 @@ Services.Domain.Model.Aggregates.Services --> Services.Domain.Model.ValueObjects
 Services.Domain.Model.Aggregates.Services --> Services.Domain.Model.ValueObjects.ServiceName
 Services.Domain.Model.Aggregates.Services --> Services.Domain.Model.ValueObjects.Duration
 Services.Domain.Model.Aggregates.Services --> Services.Domain.Model.ValueObjects.Status
-' ⚠️ Falta relacionar "price: Money" → no se define un ValueObject llamado `Money`
 
 
 ' === COMMANDS/QUERIES con AGGREGATE ===
@@ -187,7 +186,4 @@ Services.Interfaces.Rest.Assembler.ServiceResourceFromEntityAssembler --> Servic
 
 Services.Interfaces.Rest.Assembler.CreateServiceCommandFromResourceAssembler --> Services.Domain.Model.Commands.CreateServiceCommand
 Services.Interfaces.Rest.Assembler.UpdateServiceCommandFromResourceAssembler --> Services.Domain.Model.Commands.UpdateServiceCommand
-@enduml
-
-
 @enduml
