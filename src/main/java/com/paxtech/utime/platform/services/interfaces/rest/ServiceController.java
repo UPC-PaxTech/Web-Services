@@ -1,14 +1,17 @@
 package com.paxtech.utime.platform.services.interfaces.rest;
 
 import com.paxtech.utime.platform.services.domain.model.commands.CreateServiceCommand;
+import com.paxtech.utime.platform.services.domain.model.commands.DeleteServiceCommand;
 import com.paxtech.utime.platform.services.domain.model.queries.GetAllServicesQuery;
 import com.paxtech.utime.platform.services.domain.services.ServiceCommandService;
 import com.paxtech.utime.platform.services.domain.services.ServiceQueryService;
 import com.paxtech.utime.platform.services.infrastructure.persistence.jpa.repositories.ServiceRepository;
 import com.paxtech.utime.platform.services.interfaces.rest.resources.CreateServiceResource;
 import com.paxtech.utime.platform.services.interfaces.rest.resources.ServiceResource;
+import com.paxtech.utime.platform.services.interfaces.rest.resources.UpdateServiceResource;
 import com.paxtech.utime.platform.services.interfaces.rest.transform.CreateServiceCommandFromResourceAssembler;
 import com.paxtech.utime.platform.services.interfaces.rest.transform.ServiceResourceFromEntityAssembler;
+import com.paxtech.utime.platform.services.interfaces.rest.transform.UpdateServiceCommandFromResourceAssembler;
 import com.paxtech.utime.platform.workers.domain.model.queries.GetWorkerByIdQuery;
 import com.paxtech.utime.platform.workers.interfaces.rest.resources.WorkerResource;
 import com.paxtech.utime.platform.workers.interfaces.rest.transform.WorkerResourceFromEntityAssembler;
@@ -63,5 +66,29 @@ public class ServiceController {
         return ResponseEntity.ok(serviceResources);
     }
 
+    @PutMapping("/{id}")
+    @Operation(summary = "Update Service", description = "Update service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Service updated"),
+            @ApiResponse(responseCode = "404", description = "Service not found")})
+    public ResponseEntity<ServiceResource> updateService(@PathVariable Long id, @RequestBody UpdateServiceResource resource) {
+        var updateServiceCommand = UpdateServiceCommandFromResourceAssembler.toCommandFromResource(id, resource);
+        var updatedService = serviceCommandService.handle(updateServiceCommand);
+        if (updatedService.isEmpty()) return ResponseEntity.notFound().build();
+        var updatedServiceEntity = updatedService.get();
+        var updatedServiceResource = ServiceResourceFromEntityAssembler.toResourceFromEntity(updatedServiceEntity);
+        return ResponseEntity.ok(updatedServiceResource);
+    }
+
+    @DeleteMapping("/{serviceId}")
+    @Operation(summary = "Delete service", description = "Delete service")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Service deleted"),
+            @ApiResponse(responseCode = "404", description = "Service not found")})
+    public ResponseEntity<?> deleteService(@PathVariable Long serviceId) {
+        var deleteServiceCommand = new DeleteServiceCommand(serviceId);
+        serviceCommandService.handle(deleteServiceCommand);
+        return ResponseEntity.ok("Service with given id successfully deleted");
+    }
 
 }

@@ -29,8 +29,6 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
 
     public Reservation() {}
 
-
-
     public Reservation(CreateReservationCommand command){
         this.clientId= command.clientId();
         this.providerId= command.providerId();
@@ -38,8 +36,6 @@ public class Reservation extends AuditableAbstractAggregateRoot<Reservation> {
         this.timeSlotId = command.timeSlotId();
         this.workerId= command.workerId();
     }
-
-
 
     public Long getClientId() { return clientId; }
     public Long getProviderId() { return providerId; }

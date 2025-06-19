@@ -1,12 +1,15 @@
 package com.paxtech.utime.platform.workers.interfaces.rest;
 
+import com.paxtech.utime.platform.workers.domain.model.commands.DeleteWorkerCommand;
 import com.paxtech.utime.platform.workers.domain.model.queries.GetAllWorkersQuery;
 import com.paxtech.utime.platform.workers.domain.model.queries.GetWorkerByIdQuery;
 import com.paxtech.utime.platform.workers.domain.services.WorkerCommandService;
 import com.paxtech.utime.platform.workers.domain.services.WorkerQueryService;
 import com.paxtech.utime.platform.workers.interfaces.rest.resources.CreateWorkerResource;
+import com.paxtech.utime.platform.workers.interfaces.rest.resources.UpdateWorkerResource;
 import com.paxtech.utime.platform.workers.interfaces.rest.resources.WorkerResource;
 import com.paxtech.utime.platform.workers.interfaces.rest.transform.CreateWorkerCommandFromResourceAssembler;
+import com.paxtech.utime.platform.workers.interfaces.rest.transform.UpdateWorkerCommandFromResourceAssembler;
 import com.paxtech.utime.platform.workers.interfaces.rest.transform.WorkerResourceFromEntityAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -64,6 +67,37 @@ public class WorkersController {
                 .map(WorkerResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(resources);
+    }
+
+    @PutMapping("/{workerId}")
+    @Operation(summary = "Update worker", description = "Update worker")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Worker updated"),
+            @ApiResponse(responseCode = "404", description = "Worker not found")})
+    public ResponseEntity<WorkerResource> updateWorker(@PathVariable Long workerId, @RequestBody UpdateWorkerResource resource) {
+        var updateWorkerCommand = UpdateWorkerCommandFromResourceAssembler.toCommandFromResource(workerId, resource);
+        var updatedWorker = workerCommandService.handle(updateWorkerCommand);
+        if (updatedWorker.isEmpty()) return ResponseEntity.notFound().build();
+        var updatedWorkerEntity = updatedWorker.get();
+        var updatedWorkerResource = WorkerResourceFromEntityAssembler.toResourceFromEntity(updatedWorkerEntity);
+        return ResponseEntity.ok(updatedWorkerResource);
+    }
+
+    /**
+     * Delete worker
+     *
+     * @param workerId The worker id
+     * @return The message for the deleted worker
+     */
+    @DeleteMapping("/{workerId}")
+    @Operation(summary = "Delete worker", description = "Delete worker")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Worker deleted"),
+            @ApiResponse(responseCode = "404", description = "Worker not found")})
+    public ResponseEntity<?> deleteWorker(@PathVariable Long workerId) {
+        var deleteWorkerCommand = new DeleteWorkerCommand(workerId);
+        workerCommandService.handle(deleteWorkerCommand);
+        return ResponseEntity.ok("Worker with given id successfully deleted");
     }
 
 }
