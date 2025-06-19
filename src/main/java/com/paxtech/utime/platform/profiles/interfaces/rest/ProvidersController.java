@@ -18,16 +18,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
-
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * ProvidersController
+ *
+ * REST controller that manages operations related to providers,
+ * such as creating, retrieving by ID, and listing all providers.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/providers", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "Providers", description = "Endpoints for provider management")
@@ -37,37 +39,52 @@ public class ProvidersController {
     private final ProviderQueryService providerQueryService;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor
+     * @param providerCommandService Service for handling provider commands (e.g., create)
+     * @param providerQueryService Service for querying provider data
+     * @param userRepository Repository to fetch User entities
+     */
     public ProvidersController(ProviderCommandService providerCommandService, ProviderQueryService providerQueryService, UserRepository userRepository) {
         this.providerCommandService = providerCommandService;
         this.providerQueryService = providerQueryService;
         this.userRepository = userRepository;
     }
 
+    /**
+     * Create a new provider
+     * @param resource The {@link CreateProviderResource} containing the data to create the provider
+     * @return A {@link ProviderResource} if created successfully, or 400 Bad Request if creation fails
+     */
     @Operation(summary = "Create a new provider", description = "Registers a new provider in the system")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Provider created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request")
     })
-
-
-
-
     @PostMapping
     public ResponseEntity<ProviderResource> createProvider(@RequestBody CreateProviderResource resource) {
         var command = CreateProviderCommandFromResourceAssembler.toCommandFromResource(resource);
 
-        // Buscar el User por su ID
+        // Look up the user by ID
         Optional<User> userOptional = userRepository.findById(command.userId());
 
+        // Return 400 Bad Request if user is not found
         if (userOptional.isEmpty()) return ResponseEntity.badRequest().build();
 
+        // Attempt to create provider with found user
         Optional<Provider> provider = providerCommandService.handle(command, userOptional.get());
 
+        // Return 201 Created if successful, otherwise 400 Bad Request
         return provider
                 .map(value -> new ResponseEntity<>(ProviderResourceFromEntityAssembler.toResourceFromEntity(value), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    /**
+     * Retrieve a provider by ID
+     * @param id The provider ID
+     * @return A {@link ProviderResource} if found, or 404 Not Found if not
+     */
     @Operation(
             summary = "Get a provider by ID",
             description = "Retrieve a provider by its ID"
@@ -83,19 +100,29 @@ public class ProvidersController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Internal helper method to retrieve a provider by ID
+     * (not exposed as an endpoint)
+     * @param id The provider ID
+     * @return A {@link ProviderResource} if found, or 404 Not Found
+     */
     private ResponseEntity<ProviderResource> getProviderById(Long id) {
         Optional<Provider> provider = providerQueryService.handle(new GetProviderByIdQuery(id));
         return provider.map(value -> ResponseEntity.ok(ProviderResourceFromEntityAssembler.toResourceFromEntity(value)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Retrieves all providers
+     * @return A list of {@link ProviderResource}, or 404 Not Found if none exist
+     */
     @Operation(
             summary = "Get all providers",
             description = "Gets all providers in endpoint"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Favorite source(s) found"),
-            @ApiResponse(responseCode = "404", description = "Favorite source(s) not found"),
+            @ApiResponse(responseCode = "200", description = "Providers found"),
+            @ApiResponse(responseCode = "404", description = "Providers not found"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
     @GetMapping
@@ -103,8 +130,10 @@ public class ProvidersController {
         return getAllProviders();
     }
 
-
-
+    /**
+     * Internal helper method to get all providers
+     * @return A response with a list of {@link ProviderResource} or 404 if empty
+     */
     private ResponseEntity<List<ProviderResource>> getAllProviders() {
         List<Provider> providers = providerQueryService.handle(new GetAllProvidersQuery());
         if (providers.isEmpty()) return ResponseEntity.notFound().build();

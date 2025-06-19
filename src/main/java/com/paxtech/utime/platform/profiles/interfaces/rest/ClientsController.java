@@ -21,13 +21,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/**
+ * ClientsController
+ * 
+ * This controller exposes REST endpoints to manage client resources.
+ * It allows creating new clients, retrieving a client by ID, and listing all clients.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/clients", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "Clients", description = "Endpoints for client management")
@@ -37,40 +42,54 @@ public class ClientsController {
     private final ClientQueryService clientsQueryService;
     private final UserRepository userRepository;
 
-
+    /**
+     * Constructor
+     * @param clientCommandService The service responsible for command operations (create client)
+     * @param clientsQueryService The service responsible for query operations (retrieve clients)
+     * @param userRepository The repository used to fetch User entities
+     */
     public ClientsController(ClientCommandService clientCommandService, ClientQueryService clientsQueryService, UserRepository userRepository) {
         this.clientCommandService = clientCommandService;
         this.clientsQueryService = clientsQueryService;
         this.userRepository = userRepository;
     }
 
+    /**
+     * Creates a new client associated with a given user ID
+     * @param resource The {@link CreateClientResource} with client creation data
+     * @return A {@link ClientResource} for the created client, or a bad request response if creation fails
+     */
     @Operation(summary = "Create a new client", description = "Registers a new client in the system")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Client created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid request")
     })
-
     @PostMapping
     public ResponseEntity<ClientResource> createClient(@RequestBody CreateClientResource resource) {
         var command = CreateClientCommandFromResourceAssembler.toCommandFromResource(resource);
 
-        // Buscar el User por su ID (que viene en el comando)
+        // Look up the user by ID from the command
         Optional<User> userOptional = userRepository.findById(command.userId());
 
+        // Return 400 Bad Request if user is not found
         if (userOptional.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        // Llamar al servicio para crear el Client con el User encontrado
+        // Create the client using the command service
         Optional<Client> client = clientCommandService.handle(command, userOptional.get());
 
-        // Devolver el recurso creado o bad request si falla
+        // Return 201 Created if successful, otherwise 400 Bad Request
         return client
                 .map(value -> new ResponseEntity<>(ClientResourceFrontEntityAssembler.toResourceFromEntity(value), CREATED))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-
+    /**
+     * Retrieves a client by its ID
+     * @param id The ID of the client
+     * @return A {@link ClientResource} if found, or 404 Not Found if the client does not exist
+     */
     @Operation(
             summary = "Get a client by ID",
             description = "Retrieve a client by its ID"
@@ -86,7 +105,10 @@ public class ClientsController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
+    /**
+     * Retrieves all clients
+     * @return A list of {@link ClientResource}, or 404 Not Found if no clients exist
+     */
     @Operation(summary = "Get all clients", description = "Retrieve all clients")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Clients retrieved successfully"),
@@ -95,9 +117,13 @@ public class ClientsController {
     })
     @GetMapping
     public ResponseEntity<?> getClients() {
-            return getAllClients();
+        return getAllClients();
     }
 
+    /**
+     * Internal helper method to get all clients from the service
+     * @return A response entity containing the list of clients
+     */
     private ResponseEntity<List<ClientResource>> getAllClients() {
         List<Client> clients = clientsQueryService.handle(new GetAllClientsQuery());
         if (clients.isEmpty()) return ResponseEntity.notFound().build();

@@ -19,34 +19,61 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * WorkersController
+ *
+ * REST controller for handling operations related to workers.
+ * Provides endpoints for creating workers, retrieving a worker by ID, and listing all workers.
+ */
 @RestController
 @RequestMapping(value = "/api/v1/workers", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Workers", description = "Available Worker Endpoints")
 public class WorkersController {
+
     private final WorkerCommandService workerCommandService;
     private final WorkerQueryService workerQueryService;
 
+    /**
+     * Constructor
+     * @param workerCommandService Service to handle worker creation commands
+     * @param workerQueryService Service to handle worker retrieval queries
+     */
     public WorkersController(WorkerCommandService workerCommandService, WorkerQueryService workerQueryService) {
         this.workerCommandService = workerCommandService;
         this.workerQueryService = workerQueryService;
     }
 
+    /**
+     * Creates a new worker based on the given resource.
+     * @param resource The {@link CreateWorkerResource} containing worker data
+     * @return A {@link WorkerResource} if successful, or 400 Bad Request if creation fails
+     */
     @PostMapping
     @Operation(summary = "Create new Worker")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Worker created"),
-            @ApiResponse(responseCode = "400", description = "Bad request")})
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<WorkerResource> createWorker(@RequestBody CreateWorkerResource resource) {
         var createWorkerCommand = CreateWorkerCommandFromResourceAssembler.toCommandFromResource(resource);
         var worker = workerCommandService.handle(createWorkerCommand);
-        if(worker.isEmpty()) return ResponseEntity.badRequest().build();
+        if (worker.isEmpty()) return ResponseEntity.badRequest().build();
         var createdWorker = worker.get();
         var workerResource = WorkerResourceFromEntityAssembler.toResourceFromEntity(createdWorker);
         return new ResponseEntity<>(workerResource, HttpStatus.CREATED);
     }
 
+    /**
+     * Retrieves a specific worker by their ID.
+     * @param workerId The ID of the worker
+     * @return A {@link WorkerResource} if found, or 404 Not Found if the worker does not exist
+     */
     @GetMapping("/{workerId}")
     @Operation(summary = "Get a worker by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Worker found"),
+            @ApiResponse(responseCode = "404", description = "Worker not found")
+    })
     public ResponseEntity<WorkerResource> getWorkerById(@PathVariable Long workerId) {
         var query = new GetWorkerByIdQuery(workerId);
         var result = workerQueryService.handle(query);
@@ -55,8 +82,16 @@ public class WorkersController {
         return ResponseEntity.ok(resource);
     }
 
+    /**
+     * Retrieves all registered workers in the system.
+     * @return A list of {@link WorkerResource}, or 404 Not Found if no workers exist
+     */
     @GetMapping
     @Operation(summary = "Get all workers")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Workers found"),
+            @ApiResponse(responseCode = "404", description = "Workers not found")
+    })
     public ResponseEntity<List<WorkerResource>> getAllWorkers() {
         var workers = workerQueryService.handle(new GetAllWorkersQuery());
         if (workers.isEmpty()) return ResponseEntity.notFound().build();
@@ -65,5 +100,4 @@ public class WorkersController {
                 .toList();
         return ResponseEntity.ok(resources);
     }
-
 }
