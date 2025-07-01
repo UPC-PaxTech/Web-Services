@@ -1,5 +1,6 @@
 package com.paxtech.utime.platform.profiles.domain.model.entities;
 
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.Social;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSocialsInProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.UpdateSocialsInProfileCommand;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -17,12 +18,20 @@ public class SocialsInProfile extends AuditableAbstractAggregateRoot<SocialsInPr
     @Column(name = "salon_profile_id", nullable = false)
     private Long salonProfileId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "social_id", insertable = false, updatable = false)
+    private Social social;
+
     protected SocialsInProfile() {}
 
     public SocialsInProfile(CreateSocialsInProfileCommand command) {
         validate(command.socialId(), command.providerProfileId());
         this.socialId = command.socialId();
         this.salonProfileId = command.providerProfileId();
+    }
+
+    public Social getSocial() {
+        return social;
     }
 
     public SocialsInProfile update(UpdateSocialsInProfileCommand command) {

@@ -1,10 +1,10 @@
 package com.paxtech.utime.platform.profiles.domain.model.entities;
 
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.PortfolioImage;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreatePortfolioInProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.UpdatePortfolioInProfileCommand;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
@@ -17,6 +17,14 @@ public class PortfolioInProfile extends AuditableAbstractAggregateRoot<Portfolio
     @Getter
     @Column(nullable = false)
     private Long salonProfileId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "portfolio_id", insertable = false, updatable = false)
+    private PortfolioImage portfolioImage;
+
+    public PortfolioImage getPortfolioImage() {
+        return portfolioImage;
+    }
 
     // Constructor vacío requerido por JPA
     public PortfolioInProfile() {}
