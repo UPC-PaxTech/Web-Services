@@ -5,7 +5,7 @@ import com.paxtech.utime.platform.profiles.domain.model.commands.CreateProviderP
 import com.paxtech.utime.platform.profiles.domain.model.commands.DeleteProviderProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.UpdateProviderProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.services.ProviderProfileCommandService;
-import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.ProviderProfileRepository;
+import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.repositories.ProviderProfileRepository;
 
 import org.springframework.stereotype.Service;
 
