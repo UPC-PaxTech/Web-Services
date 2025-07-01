@@ -1,7 +1,5 @@
 package com.paxtech.utime.platform.profiles.domain.model.entities;
 
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.ProviderProfile;
-import com.paxtech.utime.platform.profiles.domain.model.aggregates.Social;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSocialsInProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.UpdateSocialsInProfileCommand;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
@@ -9,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 @Entity
-public class SocialsInProfiles extends AuditableAbstractAggregateRoot<SocialsInProfiles> {
+public class SocialsInProfile extends AuditableAbstractAggregateRoot<SocialsInProfile> {
 
     @Getter
     @Column(name = "social_id", nullable = false)
@@ -19,15 +17,15 @@ public class SocialsInProfiles extends AuditableAbstractAggregateRoot<SocialsInP
     @Column(name = "salon_profile_id", nullable = false)
     private Long salonProfileId;
 
-    protected SocialsInProfiles() {}
+    protected SocialsInProfile() {}
 
-    public SocialsInProfiles(CreateSocialsInProfileCommand command) {
+    public SocialsInProfile(CreateSocialsInProfileCommand command) {
         validate(command.socialId(), command.providerProfileId());
         this.socialId = command.socialId();
         this.salonProfileId = command.providerProfileId();
     }
 
-    public SocialsInProfiles update(UpdateSocialsInProfileCommand command) {
+    public SocialsInProfile update(UpdateSocialsInProfileCommand command) {
         validate(command.socialId(), command.salonProfileId());
         this.socialId = command.socialId();
         this.salonProfileId = command.salonProfileId();

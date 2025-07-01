@@ -23,7 +23,6 @@ public class ProviderProfileCommandServiceImpl implements ProviderProfileCommand
         return Optional.of(createdSalonProfile);
     }
 
-    /*Falta Update y delete*/
     @Override
     public void handle(DeleteProviderProfileCommand command) {
         if(!providerProfileRepository.existsById(command.id())){
