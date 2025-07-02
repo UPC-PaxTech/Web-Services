@@ -3,6 +3,7 @@ package com.paxtech.utime.platform.profiles.application.internal.queryservices;
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Provider;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllProvidersQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByIdQuery;
+import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByProfileIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ProviderQueryService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.repositories.ProviderRepository;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,11 @@ public class ProviderQueryServiceImpl implements ProviderQueryService {
     @Override
     public Optional<Provider> handle(GetProviderByIdQuery query) {
         return providerRepository.findById(query.id());
+    }
+    @Override
+    public Optional<Provider> handle(GetProviderByProfileIdQuery query) {
+        //return providerRepository.findByProviderProfile_Id(query.profileId());
+        return null;
     }
 
 }

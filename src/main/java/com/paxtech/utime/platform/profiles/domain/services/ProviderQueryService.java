@@ -3,6 +3,7 @@ package com.paxtech.utime.platform.profiles.domain.services;
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Provider;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllProvidersQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByIdQuery;
+import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByProfileIdQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,5 +34,7 @@ public interface ProviderQueryService {
      * @param query Query containing the email.
      * @return Optional salon.
      */
+    Optional<Provider> handle(GetProviderByProfileIdQuery query);
+
 
 }

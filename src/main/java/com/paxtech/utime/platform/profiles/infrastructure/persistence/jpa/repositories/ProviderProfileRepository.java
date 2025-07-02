@@ -1,4 +1,4 @@
-package com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa;
+package com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.repositories;
 
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.ProviderProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
