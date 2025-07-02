@@ -1,3 +1,3 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.resources;
 
-public record SocialResource(String socialIcon, String socialUrl){}
+public record SocialResource(Long id, String socialIcon, String socialUrl){}
