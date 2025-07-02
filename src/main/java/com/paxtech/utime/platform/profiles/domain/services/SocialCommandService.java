@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface SocialCommandService {
     Optional<Social> handle(CreateSocialCommand command);
-
+    Optional<Social> handle(UpdateSocialCommand command);
+    void handle(DeleteSocialCommand command);
 }

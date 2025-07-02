@@ -9,5 +9,7 @@ import java.util.Optional;
 
 public interface PortfolioImageCommandService {
     Optional<PortfolioImage> handle(CreatePortfolioImageCommand command);
+    Optional<PortfolioImage> handle(UpdatePortfolioImageCommand command);
+    void handle(DeletePortfolioImageCommand command);
 
 }

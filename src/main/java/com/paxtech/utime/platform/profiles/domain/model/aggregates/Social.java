@@ -6,7 +6,9 @@ import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstra
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Entity
 public class Social extends AuditableAbstractAggregateRoot<Social> {
 

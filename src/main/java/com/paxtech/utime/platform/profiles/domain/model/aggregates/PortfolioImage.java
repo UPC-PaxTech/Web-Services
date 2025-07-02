@@ -6,7 +6,7 @@ import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstra
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Getter;
-
+@Getter
 @Entity
 public class PortfolioImage extends AuditableAbstractAggregateRoot<PortfolioImage> {
 
@@ -14,28 +14,24 @@ public class PortfolioImage extends AuditableAbstractAggregateRoot<PortfolioImag
     @Column(nullable = false, length = 512)
     private String imageUrl;
 
-    @Getter
-    @Column(nullable = false)
-    private Long portfolioId;
 
     // Default constructor for JPA
     public PortfolioImage() {}
 
     public PortfolioImage(CreatePortfolioImageCommand command) {
-        if (command.portfolioId() == null || command.portfolioId() <= 0)
-            throw new IllegalArgumentException("Portfolio ID must be a positive number.");
-        if (command.imageUrl() == null || command.imageUrl().isBlank())
-            throw new IllegalArgumentException("Image URL must not be null or blank.");
-
-        this.portfolioId = command.portfolioId();
+        validate(command.imageUrl());
         this.imageUrl = command.imageUrl();
     }
 
     public PortfolioImage update(UpdatePortfolioImageCommand command) {
-        if (command.imageUrl() == null || command.imageUrl().isBlank())
-            throw new IllegalArgumentException("Image URL must not be null or blank.");
-
+        validate(command.imageUrl());
         this.imageUrl = command.imageUrl();
         return this;
+    }
+
+    private void validate(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank() || imageUrl.length() > 200) {
+            throw new IllegalArgumentException("Invalid portfolio image URL");
+        }
     }
 }

@@ -4,8 +4,9 @@ import com.paxtech.utime.platform.profiles.domain.model.commands.CreateProviderC
 import com.paxtech.utime.platform.profiles.domain.model.valueobjects.CompanyName;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+@Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Provider extends AuditableAbstractAggregateRoot<Provider> {
@@ -18,6 +19,10 @@ public class Provider extends AuditableAbstractAggregateRoot<Provider> {
     @JoinColumn(name = "user_id", nullable = false, unique = true) // FK en tabla Provider
     private User user;
 
+    /*
+    @OneToOne
+    @JoinColumn(name = "provider_profile_id", referencedColumnName = "id", nullable = false)
+    private ProviderProfile providerProfile;*/
 
     protected Provider() {}
 
@@ -25,9 +30,6 @@ public class Provider extends AuditableAbstractAggregateRoot<Provider> {
         this.companyName = new CompanyName(command.companyName());
         this.user = user;
     }
-
-
-    public User getUser() { return user; }
 
     public String getCompanyName() {
         return companyName.getValue();

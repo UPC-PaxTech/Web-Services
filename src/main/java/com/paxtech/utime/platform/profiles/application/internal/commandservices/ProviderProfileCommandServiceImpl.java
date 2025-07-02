@@ -18,9 +18,11 @@ public class ProviderProfileCommandServiceImpl implements ProviderProfileCommand
     }
     @Override
     public Optional<ProviderProfile> handle(CreateProviderProfileCommand command) {
-        var salonProfile = providerProfileRepository.save(new ProviderProfile(command));
-        var createdSalonProfile = providerProfileRepository.save(salonProfile);
-        return Optional.of(createdSalonProfile);
+        // Elimina el doble save y crea directamente el perfil
+        var salonProfile = new ProviderProfile(
+                command
+        );
+        return Optional.of(providerProfileRepository.save(salonProfile));
     }
 
     @Override

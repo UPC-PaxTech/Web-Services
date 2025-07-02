@@ -1,9 +1,9 @@
 package com.paxtech.utime.platform.profiles.interfaces.rest.transform;
-
+/*
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Provider;
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.ProviderProfile;
-import com.paxtech.utime.platform.profiles.domain.model.entities.PortfolioInProfile;
-import com.paxtech.utime.platform.profiles.domain.model.entities.SocialsInProfile;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.PortfolioInProfile;
+import com.paxtech.utime.platform.profiles.domain.model.aggregates.SocialInProfile;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ProfileResource;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class ProfileResourceFromEntityAssembler {
     public static ProfileResource toResourceFromEntity(
             ProviderProfile profile,
             Provider provider,
-            List<SocialsInProfile> socials,
+            List<SocialInProfile> socials,
             List<PortfolioInProfile> portfolios
     ) {
         return new ProfileResource(
@@ -25,8 +25,8 @@ public class ProfileResourceFromEntityAssembler {
                 profile.getProfileUrl().getUrl(),
                 profile.getCoverUrl().getUrl(),
                 socials.stream().collect(Collectors.toMap(
-                        (SocialsInProfile s) -> s.getSocial().getSocialIcon(),
-                        (SocialsInProfile s) -> s.getSocial().getSocialUrl()
+                        (SocialInProfile s) -> s.getSocial().getSocialIcon(),
+                        (SocialInProfile s) -> s.getSocial().getSocialUrl()
                 ))
                 ,
                 portfolios.stream()
@@ -34,4 +34,4 @@ public class ProfileResourceFromEntityAssembler {
                         .collect(Collectors.toList())
         );
     }
-}
+}*/
