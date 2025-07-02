@@ -18,10 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -94,7 +91,7 @@ public class ProviderProfileController {
 
         var portfolioLinks = portfolioInProfileQueryService.handle(new GetAllPortfolioInProfilesByProviderProfileIdQuery(profile.getId()));
         List<PortfolioImageResource> portfolioImages = portfolioLinks.stream()
-                .map(link -> new PortfolioImageResource(link.getPortfolio().getImageUrl()))
+                .map(link -> new PortfolioImageResource(link.getId(), link.getPortfolio().getImageUrl()))
                 .toList();
 
         var resource = new ProfileResource(
@@ -120,32 +117,46 @@ public class ProviderProfileController {
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Profile not found")})
     public ResponseEntity<ProfileResource> createProfile(@RequestBody CreateFullProfileResource resource) {
-        var providerProfileResource = new CreateProviderProfileResource(resource.profileImageUrl(), resource.coverImageUrl(), resource.providerId());
-        var createProviderProfileCommand = CreateProviderProfileCommandFromResourceAssembler.toCommandFromResource(providerProfileResource);
+        var providerProfileResource = new CreateProviderProfileResource(
+                resource.profileImageUrl(),
+                resource.coverImageUrl(),
+                resource.providerId()
+        );
+        var createProviderProfileCommand =
+                CreateProviderProfileCommandFromResourceAssembler.toCommandFromResource(providerProfileResource);
         var providerProfile = providerProfileCommandService.handle(createProviderProfileCommand);
 
+        // Crear y vincular redes sociales
         if (resource.socials() != null && !resource.socials().isEmpty()) {
             resource.socials().forEach((socialIcon, socialUrl) -> {
                 var socialResource = new CreateSocialResource(socialUrl, socialIcon);
                 var createSocialCommand = CreateSocialCommandFromResourceAssembler.toCommandFromResource(socialResource);
-                // Asumo que tienes un socialCommandService similar al providerProfileCommandService
                 var social = socialCommandService.handle(createSocialCommand);
                 if (social.isEmpty()) return;
-                var socialInProfile = socialInProfileCommandService.handle(new CreateSocialInProfileCommand(providerProfile.get().getId(),social.get().getId()));
-
+                socialInProfileCommandService.handle(new CreateSocialInProfileCommand(
+                        providerProfile.get().getId(), social.get().getId()
+                ));
             });
-
         }
+
+        // Crear y vincular portfolio images
+        List<PortfolioImageResource> portfolioResources = new ArrayList<>();
         if (resource.portfolioImages() != null && !resource.portfolioImages().isEmpty()) {
-            resource.portfolioImages().forEach(imageUrl -> {
+            for (String imageUrl : resource.portfolioImages()) {
                 var portfolioImageResource = new CreatePortfolioImageResource(imageUrl);
-                var createPortfolioImageCommand = CreatePortfolioImageCommandFromResourceAssembler.toCommandFromResource(
-                        portfolioImageResource
-                );
-                var portfolioImage = portfolioImageCommandService.handle(createPortfolioImageCommand);
-                if (portfolioImage.isEmpty()) return;
-                var portfolioInProfile = portfolioInProfileCommandService.handle(new CreatePortfolioInProfileCommand(providerProfile.get().getId(),portfolioImage.get().getId()));
-            });
+                var command = CreatePortfolioImageCommandFromResourceAssembler.toCommandFromResource(portfolioImageResource);
+                var portfolioImage = portfolioImageCommandService.handle(command);
+                if (portfolioImage.isEmpty()) continue;
+
+                portfolioInProfileCommandService.handle(new CreatePortfolioInProfileCommand(
+                        providerProfile.get().getId(), portfolioImage.get().getId()
+                ));
+
+                portfolioResources.add(new PortfolioImageResource(
+                        portfolioImage.get().getId(),
+                        portfolioImage.get().getImageUrl()
+                ));
+            }
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
@@ -157,11 +168,11 @@ public class ProviderProfileController {
                         providerProfile.get().getProfileImageUrl(),
                         providerProfile.get().getCoverImageUrl(),
                         resource.socials(),
-                        resource.portfolioImages().stream().map(PortfolioImageResource::new).toList()
+                        portfolioResources
                 )
         );
-
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a provider profile", description = "Delete a provider profile by ID")
