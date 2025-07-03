@@ -108,14 +108,14 @@ public class WebSecurityConfiguration {
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/webjars/**"
+                                "/webjars/**",
+                                "/api/v1/providers/**",
+                                "/api/v1/clients/**"
                         ).permitAll()
-                        .requestMatchers("/api/v1/providers/**").authenticated()
                         .requestMatchers("/api/v1/reviews/**").authenticated()
                         .requestMatchers("/api/v1/payments/**").authenticated()
                         .requestMatchers("/api/v1/workers/**").authenticated()
                         .requestMatchers("/api/v1/profilesCHECKTEST/**").authenticated()
-                        .requestMatchers("/api/v1/clients/**").authenticated()
                         .requestMatchers("/api/v1/time-slots/**").authenticated()
                         .requestMatchers("/api/v1/reservations/**").authenticated()
                         .requestMatchers("/api/v1/services/**").authenticated()
