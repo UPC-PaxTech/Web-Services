@@ -1,6 +1,6 @@
 package com.paxtech.utime.platform.services.domain.model.queries;
 
-import com.paxtech.utime.platform.services.domain.model.valueobjects.SalonId;
+import com.paxtech.utime.platform.services.domain.model.valueobjects.ProviderId;
 
-public record GetServicesBySalonIdQuery(SalonId salonId) {
+public record GetServicesBySalonIdQuery(ProviderId providerId) {
 }

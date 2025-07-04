@@ -5,6 +5,6 @@ import com.paxtech.utime.platform.reviews.interfaces.rest.resources.CreateReview
 
 public class CreateReviewCommandFromResourceAssembler {
     public static CreateReviewCommand toCommandFromResource(CreateReviewResource resource){
-        return new CreateReviewCommand(resource.clientId(), resource.salonId(), resource.rating(), resource.review(), false);
+        return new CreateReviewCommand(resource.clientId(), resource.providerId(), resource.rating(), resource.review(), false);
     }
 }

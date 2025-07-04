@@ -21,7 +21,7 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 
     @Override
     public Optional<Review> handle(GetReviewBySalonIdAndClientIdQuery query) {
-        return reviewRepository.findBySalonIdAndClientId(query.salonId(), query.clientId());
+        return reviewRepository.findByProviderIdAndClientId(query.salonId(), query.clientId());
     }
 
     @Override

@@ -19,7 +19,7 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 
     @Override
     public Optional<Review> handle(CreateReviewCommand command){
-        var alreadyExists = reviewRepository.findBySalonIdAndClientId(command.salonId(), command.clientId());
+        var alreadyExists = reviewRepository.findByProviderIdAndClientId(command.providerId(), command.clientId());
         if (alreadyExists.isPresent()) {
             throw new IllegalArgumentException("Review for this salon already exists");
         }

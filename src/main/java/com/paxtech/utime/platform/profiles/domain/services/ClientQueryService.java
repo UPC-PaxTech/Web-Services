@@ -28,4 +28,6 @@ public interface ClientQueryService {
      */
     Optional<Client> handle(GetClientByIdQuery query);
 
+    Optional<Client> handle(GetClientByUserIdQuery query);
+
 }

@@ -16,7 +16,7 @@ public class Review extends AuditableAbstractAggregateRoot<Review> {
     @Setter
     @Column(nullable = false)
     @Getter
-    private Long salonId;
+    private Long providerId;
     @Setter
     @Getter
     @Column(nullable = false)
@@ -35,7 +35,7 @@ public class Review extends AuditableAbstractAggregateRoot<Review> {
 
     public Review(CreateReviewCommand command){
         this.clientId = command.clientId();
-        this.salonId = command.salonId();
+        this.providerId = command.providerId();
         this.review = command.review();
         this.rating = command.rating();
         this.isRead = command.read();

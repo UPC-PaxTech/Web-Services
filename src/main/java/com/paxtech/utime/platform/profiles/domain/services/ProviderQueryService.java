@@ -4,6 +4,7 @@ import com.paxtech.utime.platform.profiles.domain.model.aggregates.Provider;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllProvidersQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByProfileIdQuery;
+import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByUserIdQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,5 +37,5 @@ public interface ProviderQueryService {
      */
     Optional<Provider> handle(GetProviderByProfileIdQuery query);
 
-
+    Optional<Provider> handle(GetProviderByUserIdQuery query);
 }

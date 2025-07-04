@@ -5,9 +5,10 @@ import com.paxtech.utime.platform.services.domain.model.valueobjects.*;
 import com.paxtech.utime.platform.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jdk.jshell.Snippet;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Entity
 public class Service extends AuditableAbstractAggregateRoot<Service> {
     @Embedded @Getter
@@ -24,7 +25,7 @@ public class Service extends AuditableAbstractAggregateRoot<Service> {
     Status status;
 
     @Embedded @Getter
-    SalonId salonId;
+    ProviderId providerId;
 
     public Service() {}
 
@@ -33,14 +34,14 @@ public class Service extends AuditableAbstractAggregateRoot<Service> {
         this.duration = new Duration(command.duration());
         this.price = new Price(command.price());
         this.status = new Status(command.status());
-        this.salonId = new SalonId(command.salonId());
+        this.providerId = new ProviderId(command.providerId());
     }
 
-    public Service updateInformation(String newName, Integer newDuration, Long newPrice, boolean newStatus) {
+    public Service updateInformation(String newName, Integer newDuration, Long newPrice) {
         this.name = new Name(newName);
         this.duration = new Duration(newDuration);
         this.price = new Price(newPrice);
-        this.status = new Status(newStatus);
+        //this.status = new Status(newStatus);
         return this;
     }
     // ADD SERVICE "DESCRIPTION" AND CHANGE PRICE VALUE OBJECT TO MONEY VALUE OBJECT 

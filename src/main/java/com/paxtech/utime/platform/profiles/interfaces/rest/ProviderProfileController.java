@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/profilesCHECKTEST")
+@RequestMapping("/api/v1/provider-profiles")
 @Tag(name = "Provider Profiles", description = "Endpoints for managing provider profiles and their relations")
 public class ProviderProfileController {
 
@@ -95,6 +95,7 @@ public class ProviderProfileController {
                 .toList();
 
         var resource = new ProfileResource(
+                profile.getId(),
                 provider.getId(),
                 provider.getCompanyName(),
                 "String Location",
@@ -162,6 +163,7 @@ public class ProviderProfileController {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ProfileResource(
                         providerProfile.get().getId(),
+                        providerProfile.get().getProviderId(),
                         resource.companyName(),
                         resource.location(),
                         resource.email(),
@@ -187,6 +189,73 @@ public class ProviderProfileController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResource(e.getMessage()));
         }
+    }
+
+    /**
+     * Retrieves every provider profile with its relations
+     * @return 200 + array de ProfileResource o 404 si no hay perfiles
+     */
+    @Operation(
+            summary = "Get all provider profiles",
+            description = "Retrieve every provider profile with socials and portfolio images"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profiles retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "No profiles found")
+    })
+    @GetMapping
+    public ResponseEntity<List<ProfileResource>> getAllProfiles() {
+
+        // 1. Traer todos los profiles
+        var profiles = providerProfileQueryService.handle(new GetAllProviderProfilesQuery());
+        if (profiles.isEmpty()) return ResponseEntity.notFound().build();
+
+        // 2. Convertir cada uno a ProfileResource
+        List<ProfileResource> resources = profiles.stream().map(profile -> {
+
+            /* 2A. Provider */
+            var provider = providerQueryService
+                    .handle(new GetProviderByIdQuery(profile.getProviderId()))
+                    .orElse(null);                       // debería existir
+
+            /* 2B. Socials */
+            var socialLinks = socialsInProfileQueryService
+                    .handle(new GetAllSocialsInProfileByProviderProfileIdQuery(profile.getId()));
+
+            Map<String, String> socialsMap = socialLinks.stream()
+                    .map(link -> socialQueryService.handle(new GetSocialByIdQuery(link.getSocial().getId())))
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
+                    .collect(Collectors.toMap(
+                            Social::getSocialIcon,
+                            Social::getSocialUrl,
+                            (a, b) -> a
+                    ));
+
+            /* 2C. Portfolio */
+            var portfolioLinks = portfolioInProfileQueryService
+                    .handle(new GetAllPortfolioInProfilesByProviderProfileIdQuery(profile.getId()));
+
+            List<PortfolioImageResource> portfolioImages = portfolioLinks.stream()
+                    .map(l -> new PortfolioImageResource(l.getId(), l.getPortfolio().getImageUrl()))
+                    .toList();
+
+            /* 2D. Construir recurso */
+            return new ProfileResource(
+                    provider != null ? provider.getId() : null,
+                    profile.getProviderId(),
+                    provider != null ? provider.getCompanyName() : null,
+                    "String Location",
+                    provider != null ? provider.getUser().getEmail() : null,
+                    profile.getProfileImageUrl(),
+                    profile.getCoverImageUrl(),
+                    socialsMap,
+                    portfolioImages
+            );
+        }).toList();
+
+        // 3. Respuesta
+        return ResponseEntity.ok(resources);
     }
 
 }

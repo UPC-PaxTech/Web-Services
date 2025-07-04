@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    Optional<Review> findBySalonIdAndClientId(Long salonId, Long clientId);
+    Optional<Review> findByProviderIdAndClientId(Long salonId, Long clientId);
 
 }

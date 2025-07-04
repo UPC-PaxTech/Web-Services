@@ -8,9 +8,9 @@ public class CreateServiceCommandFromResourceAssembler {
         return new CreateServiceCommand(
                 resource.name(),
                 resource.duration(),
-                resource.Price(),
+                resource.price(),
                 true,
-                resource.salonId()
+                resource.providerId()
         );
     }
 }

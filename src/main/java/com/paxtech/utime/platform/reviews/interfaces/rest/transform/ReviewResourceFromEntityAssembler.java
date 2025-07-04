@@ -5,6 +5,6 @@ import com.paxtech.utime.platform.reviews.interfaces.rest.resources.ReviewResour
 
 public class ReviewResourceFromEntityAssembler {
     public static ReviewResource toResourceFromEntity(Review entity){
-        return new ReviewResource(entity.getId(), entity.getClientId(), entity.getSalonId(), entity.getRating(), entity.getReview(), entity.isRead());
+        return new ReviewResource(entity.getId(), entity.getClientId(), entity.getProviderId(), entity.getRating(), entity.getReview(), entity.isRead());
     }
 }

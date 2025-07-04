@@ -5,6 +5,7 @@ import com.paxtech.utime.platform.iam.infrastructure.persistence.jpa.repositorie
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllClientsQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientByIdQuery;
+import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientByUserIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ClientCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.ClientQueryService;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ClientResource;
@@ -132,4 +133,26 @@ public class ClientsController {
                 .toList();
         return ResponseEntity.ok(resources);
     }
+
+    /**
+     * Obtiene el client ligado a un usuario específico
+     * @param userId id del usuario autenticado
+     * @return ClientResource si existe, 404 si no
+     */
+    @Operation(
+            summary = "Get client by userId",
+            description = "Retrieve the client associated to the given user id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Client found"),
+            @ApiResponse(responseCode = "404", description = "Client not found")
+    })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ClientResource> getClientByUserId(@PathVariable Long userId) {
+        var result = clientsQueryService.handle(new GetClientByUserIdQuery(userId));
+        return result
+                .map(client -> ResponseEntity.ok(ClientResourceFrontEntityAssembler.toResourceFromEntity(client)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }

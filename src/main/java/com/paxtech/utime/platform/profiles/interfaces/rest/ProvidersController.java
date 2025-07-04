@@ -3,9 +3,12 @@ package com.paxtech.utime.platform.profiles.interfaces.rest;
 import com.paxtech.utime.platform.iam.domain.model.aggregates.User;
 import com.paxtech.utime.platform.iam.infrastructure.persistence.jpa.repositories.UserRepository;
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Provider;
+import com.paxtech.utime.platform.profiles.domain.model.commands.CreateProviderProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllProvidersQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByIdQuery;
+import com.paxtech.utime.platform.profiles.domain.model.queries.GetProviderByUserIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ProviderCommandService;
+import com.paxtech.utime.platform.profiles.domain.services.ProviderProfileCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.ProviderQueryService;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.CreateProviderResource;
 import com.paxtech.utime.platform.profiles.interfaces.rest.resources.ProviderResource;
@@ -38,6 +41,7 @@ public class ProvidersController {
     private final ProviderCommandService providerCommandService;
     private final ProviderQueryService providerQueryService;
     private final UserRepository userRepository;
+    private final ProviderProfileCommandService providerProfileCommandService;
 
     /**
      * Constructor
@@ -45,10 +49,11 @@ public class ProvidersController {
      * @param providerQueryService Service for querying provider data
      * @param userRepository Repository to fetch User entities
      */
-    public ProvidersController(ProviderCommandService providerCommandService, ProviderQueryService providerQueryService, UserRepository userRepository) {
+    public ProvidersController(ProviderCommandService providerCommandService, ProviderQueryService providerQueryService, UserRepository userRepository, ProviderProfileCommandService providerProfileCommandService) {
         this.providerCommandService = providerCommandService;
         this.providerQueryService = providerQueryService;
         this.userRepository = userRepository;
+        this.providerProfileCommandService = providerProfileCommandService;
     }
 
     /**
@@ -74,6 +79,9 @@ public class ProvidersController {
         // Attempt to create provider with found user
         Optional<Provider> provider = providerCommandService.handle(command, userOptional.get());
 
+        //Create ProviderProfile
+        var createdProfileCommand = new CreateProviderProfileCommand("to Choose", "to Choose",provider.get().getId());
+        providerProfileCommandService.handle(createdProfileCommand);
         // Return 201 Created if successful, otherwise 400 Bad Request
         return provider
                 .map(value -> new ResponseEntity<>(ProviderResourceFromEntityAssembler.toResourceFromEntity(value), CREATED))
@@ -141,5 +149,13 @@ public class ProvidersController {
                 .map(ProviderResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(resources);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ProviderResource> getProviderByUserId(@PathVariable Long userId) {
+        Optional<Provider> providerOptional = providerQueryService.handle(new GetProviderByUserIdQuery(userId));
+        return providerOptional
+                .map(provider -> ResponseEntity.ok(ProviderResourceFromEntityAssembler.toResourceFromEntity(provider)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

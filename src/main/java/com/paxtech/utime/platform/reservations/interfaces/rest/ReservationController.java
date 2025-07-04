@@ -30,7 +30,7 @@ import java.util.List;
  * ReservationController
  */
 @RestController
-@RequestMapping(value = "/api/v1/reservations", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/reservationsDetails", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Reservations", description = "Available Reservation Endpoints")
 public class ReservationController {
     private final ReservationCommandService reservationCommandService;
@@ -110,7 +110,7 @@ public class ReservationController {
         return ResponseEntity.ok(resources);
     }
 
-    @GetMapping("/{reservationId}/details")
+    @GetMapping("/details/{reservationId}/")
     @Operation(summary = "Get detailed reservation information")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Reservation details found"),
@@ -133,5 +133,39 @@ public class ReservationController {
 
         return ResponseEntity.ok(detailsResource);
     }
+
+    /**
+     * Get all reservations with full detail (provider, worker, time-slot, payment)
+     * @return 200 + array de ReservationDetailsResource, o 404 si no existen
+     */
+    @GetMapping("/details")
+    @Operation(
+            summary = "Get detailed information for all reservations",
+            description = "Returns every reservation along with provider, worker, time-slot and payment data"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reservation details found"),
+            @ApiResponse(responseCode = "404", description = "No reservations found")
+    })
+    public ResponseEntity<List<ReservationDetailsResource>> getAllReservationDetails() {
+
+        /* 1. Traer todas las reservas */
+        var reservations = reservationQueryService.handle(new GetAllReservationsQuery());
+        if (reservations.isEmpty()) return ResponseEntity.notFound().build();
+
+        /* 2. Transformar cada una a ReservationDetailsResource */
+        var resources = reservations.stream()
+                .map(res -> ReservationDetailsResourceFromEntityAssembler.toResourceFromEntity(
+                        res,
+                        providerContextFacade,
+                        timeSlotQueryService,
+                        workerContextFacade,
+                        paymentQueryService
+                ))
+                .toList();
+
+        return ResponseEntity.ok(resources);
+    }
+
 }
 
