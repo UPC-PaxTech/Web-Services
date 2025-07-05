@@ -258,4 +258,39 @@ public class ProviderProfileController {
         return ResponseEntity.ok(resources);
     }
 
+    @PutMapping("/{id}")
+    @Operation(summary = "Update profile image and cover")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Profile updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Profile not found")
+    })
+    public ResponseEntity<?> updateProfile(
+            @PathVariable Long id,
+            @RequestBody UpdateProviderProfileResource resource) {
+
+        try {
+            var command = new UpdateProviderProfileCommand(
+                    id,
+                    resource.profileImageUrl(),
+                    resource.coverImageUrl()
+            );
+
+            var updated = providerProfileCommandService.handle(command);
+
+            if (updated.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new MessageResource("Profile not found"));
+            }
+
+            return ResponseEntity.ok(new MessageResource("Profile updated successfully"));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new MessageResource(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new MessageResource("Error updating profile"));
+        }
+    }
+
 }

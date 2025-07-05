@@ -4,6 +4,7 @@ import com.paxtech.utime.platform.profiles.domain.model.aggregates.PortfolioImag
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreatePortfolioImageCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreatePortfolioInProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.DeletePortfolioImageCommand;
+import com.paxtech.utime.platform.profiles.domain.model.commands.UpdatePortfolioImageCommand;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetPortfolioInProfilesByProviderProfileIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.PortfolioImageCommandService;
 import com.paxtech.utime.platform.profiles.domain.services.PortfolioInProfileCommandService;
@@ -53,7 +54,7 @@ public class PortfolioImagesController {
 
         // Asociar al perfil
         portfolioInProfileCommandService.handle(
-                new CreatePortfolioInProfileCommand(providerProfileId, image.getId())
+                new CreatePortfolioInProfileCommand(image.getId(),providerProfileId)
         );
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -79,4 +80,26 @@ public class PortfolioImagesController {
 
         return ResponseEntity.ok(result);
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar una imagen del portafolio")
+    public ResponseEntity<PortfolioImageResource> updatePortfolioImage(
+            @PathVariable Long providerProfileId,
+            @PathVariable Long id,
+            @RequestBody CreatePortfolioImageResource resource) {
+
+        var command = new UpdatePortfolioImageCommand(id, resource.imageUrl());
+
+        var updated = portfolioImageCommandService.handle(command);
+
+        if (updated.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Portfolio image not found");
+        }
+
+        return ResponseEntity.ok(new PortfolioImageResource(
+                updated.get().getId(),
+                updated.get().getImageUrl()
+        ));
+    }
+
 }

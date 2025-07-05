@@ -4,6 +4,7 @@ import com.paxtech.utime.platform.profiles.domain.model.aggregates.Social;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSocialCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.CreateSocialInProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.DeleteSocialCommand;
+import com.paxtech.utime.platform.profiles.domain.model.commands.UpdateSocialCommand;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSocialByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSocialInProfileByIdQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetSocialsInProfileByProviderProfileIdQuery;
@@ -81,6 +82,32 @@ public class SocialsController {
                     .map(link -> new SocialResource(link.getSocial().getId(), link.getSocial().getSocialIcon(), link.getSocial().getSocialUrl()))
                     .toList());
         }
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar una red social existente")
+    public ResponseEntity<SocialResource> updateSocial(
+            @PathVariable Long providerProfileId,
+            @PathVariable Long id,
+            @RequestBody CreateSocialResource resource) {
+
+        var command = new UpdateSocialCommand(
+                id,
+                resource.socialUrl(),
+                resource.socialIcon()
+        );
+
+        var updated = socialCommandService.handle(command);
+
+        if (updated.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Social not found");
+        }
+
+        return ResponseEntity.ok(new SocialResource(
+                updated.get().getId(),
+                updated.get().getSocialIcon(),
+                updated.get().getSocialUrl()
+        ));
     }
 
 
