@@ -4,7 +4,7 @@ public record ServiceResource(
         Long id,
         String name,
         Integer duration,
-        Long Price,
-        Long SalonId
+        Long price,
+        Long providerId
 ) {
 }

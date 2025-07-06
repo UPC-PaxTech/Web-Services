@@ -9,8 +9,7 @@ public class UpdateServiceCommandFromResourceAssembler {
                 id,
                 resource.name(),
                 resource.duration(),
-                resource.Price(),
-                resource.status()
+                resource.price()
         );
     }
 }

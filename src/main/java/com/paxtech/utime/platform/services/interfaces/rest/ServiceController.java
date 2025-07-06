@@ -79,7 +79,7 @@ public class ServiceController {
             @ApiResponse(responseCode = "200", description = "Services found"),
             @ApiResponse(responseCode = "404", description = "Services not found")
     })
-    public ResponseEntity<List<ServiceResource>> getAAllServices() {
+    public ResponseEntity<List<ServiceResource>> getAllServices() {
         var services = serviceQueryService.handle(new GetAllServicesQuery());
         if (services.isEmpty()) return ResponseEntity.notFound().build();
         var serviceResources = services.stream()

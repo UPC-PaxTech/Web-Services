@@ -108,11 +108,21 @@ public class WebSecurityConfiguration {
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
-                                "/swagger-resources/**",
-                                "/api/v1/reservations/**",
-                                "/api/v1/workers/**",
-                                "/api/v1/**",
-                                "/webjars/**").permitAll()
+                                "/webjars/**",
+                                "/api/v1/providers/**",
+                                "/api/v1/clients/**",
+                                "/api/v1/users/**",
+                                "/api/v1/services/**",
+                                "api/v1/provider-profiles/**",
+                                "/api/v1/reservationsDetails/details/**",
+                                "/api/v1/reservationsDetails/**"
+                        ).permitAll()
+                        .requestMatchers("/api/v1/reviews/**").authenticated()
+                        .requestMatchers("/api/v1/payments/**").authenticated()
+                        .requestMatchers("/api/v1/workers/**").authenticated()
+                        .requestMatchers("/api/v1/time-slots/**").authenticated()
+                        .requestMatchers("/api/v1/reservations/**").authenticated()
+                        //.requestMatchers("/api/v1/services/**").authenticated()
                         .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authorizationRequestFilter(), UsernamePasswordAuthenticationFilter.class);

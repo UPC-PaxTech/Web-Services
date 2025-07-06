@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,7 +27,6 @@ public class UserDetailsImpl implements UserDetails {
     private final boolean accountNonLocked;
     private final boolean credentialsNonExpired;
     private final boolean enabled;
-    @JsonIgnore
     private final Collection<? extends GrantedAuthority> authorities;
 
     /**
@@ -34,15 +34,16 @@ public class UserDetailsImpl implements UserDetails {
      * @param email The email.
      * @param password The password.
      */
-    public UserDetailsImpl(String email, String password) {
+    public UserDetailsImpl(String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;
         this.password = password;
+        this.authorities = authorities;
         this.accountNonExpired = true;
         this.accountNonLocked = true;
         this.credentialsNonExpired = true;
         this.enabled = true;
-        this.authorities = List.of(); // No roles
     }
+
 
     /**
      * This method is responsible for building the UserDetailsImpl object from the User object.
@@ -50,11 +51,22 @@ public class UserDetailsImpl implements UserDetails {
      * @return The UserDetailsImpl object.
      */
     public static UserDetailsImpl build(User user) {
-        return new UserDetailsImpl(user.getEmail(), user.getPassword());
+        // As we don't need roles, return an empty list of authorities
+        Collection<GrantedAuthority> authorities = Collections.emptyList();  // No authorities are assigned
+        return new UserDetailsImpl(
+                user.getEmail(), // Use email as the identifier
+                user.getPassword(),
+                authorities);
     }
 
+    /**
+     * This method is required by UserDetails interface.
+     * @return The username, which in this case is the email.
+     */
     @Override
     public String getUsername() {
-        return this.email;
+        return email; // Return email as username
     }
+
+    // Optionally override other methods as needed, but they're already set to "true" by default.
 }

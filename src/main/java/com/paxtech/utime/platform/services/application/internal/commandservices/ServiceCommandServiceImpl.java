@@ -19,7 +19,7 @@ public class ServiceCommandServiceImpl implements ServiceCommandService {
     @Override
     public Optional<Service> handle(CreateServiceCommand command) {
         var service = new Service(command);
-        if (serviceRepository.existsBySalonIdAndName(service.getSalonId(), service.getName())) {
+        if (serviceRepository.existsByProviderIdAndName(service.getProviderId(), service.getName())) {
             throw new IllegalArgumentException("A service with this name already exists for this salon");
         }
         serviceRepository.save(service);
@@ -49,7 +49,7 @@ public class ServiceCommandServiceImpl implements ServiceCommandService {
         }
         var serviceToUpdate = result.get();
         try {
-            var updatedService = serviceRepository.save(serviceToUpdate.updateInformation(command.name(), command.duration(), command.price(), command.status()));
+            var updatedService = serviceRepository.save(serviceToUpdate.updateInformation(command.name(), command.duration(), command.price()));
             return Optional.of(updatedService);
         } catch (Exception e){
             throw new IllegalArgumentException("Error while updating service", e);

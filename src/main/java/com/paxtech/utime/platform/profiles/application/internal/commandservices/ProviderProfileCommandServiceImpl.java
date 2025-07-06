@@ -5,7 +5,7 @@ import com.paxtech.utime.platform.profiles.domain.model.commands.CreateProviderP
 import com.paxtech.utime.platform.profiles.domain.model.commands.DeleteProviderProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.model.commands.UpdateProviderProfileCommand;
 import com.paxtech.utime.platform.profiles.domain.services.ProviderProfileCommandService;
-import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.ProviderProfileRepository;
+import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.repositories.ProviderProfileRepository;
 
 import org.springframework.stereotype.Service;
 
@@ -18,12 +18,13 @@ public class ProviderProfileCommandServiceImpl implements ProviderProfileCommand
     }
     @Override
     public Optional<ProviderProfile> handle(CreateProviderProfileCommand command) {
-        var salonProfile = providerProfileRepository.save(new ProviderProfile(command));
-        var createdSalonProfile = providerProfileRepository.save(salonProfile);
-        return Optional.of(createdSalonProfile);
+        // Elimina el doble save y crea directamente el perfil
+        var salonProfile = new ProviderProfile(
+                command
+        );
+        return Optional.of(providerProfileRepository.save(salonProfile));
     }
 
-    /*Falta Update y delete*/
     @Override
     public void handle(DeleteProviderProfileCommand command) {
         if(!providerProfileRepository.existsById(command.id())){

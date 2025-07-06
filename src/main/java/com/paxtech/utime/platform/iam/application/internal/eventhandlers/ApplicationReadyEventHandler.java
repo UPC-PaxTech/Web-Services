@@ -24,7 +24,8 @@ public class ApplicationReadyEventHandler {
     @EventListener
     public void on(ApplicationReadyEvent event) {
         var applicationName = event.getApplicationContext().getId();
-        LOGGER.info("Application {} started at {}", applicationName, currentTimestamp());
+        LOGGER.info("Application ready for {} at {}", applicationName, currentTimestamp());
+        LOGGER.info("Application startup finished for {} at {}", applicationName, currentTimestamp());
     }
 
     private Timestamp currentTimestamp() {

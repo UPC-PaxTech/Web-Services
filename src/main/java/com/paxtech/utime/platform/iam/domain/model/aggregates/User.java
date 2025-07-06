@@ -40,4 +40,5 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         this.password = password;
     }
 
+
 }

@@ -3,6 +3,7 @@ package com.paxtech.utime.platform.profiles.application.internal.queryservices;
 import com.paxtech.utime.platform.profiles.domain.model.aggregates.Client;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetAllClientsQuery;
 import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientByIdQuery;
+import com.paxtech.utime.platform.profiles.domain.model.queries.GetClientByUserIdQuery;
 import com.paxtech.utime.platform.profiles.domain.services.ClientQueryService;
 import com.paxtech.utime.platform.profiles.infrastructure.persistence.jpa.repositories.ClientRepository;
 import org.springframework.stereotype.Service;
@@ -32,4 +33,8 @@ public class ClientQueryServiceImpl implements ClientQueryService {
         return clientRepository.findById(query.id());
     }
 
+    @Override
+    public Optional<Client> handle(GetClientByUserIdQuery query){
+        return clientRepository.findByUserId(query.userId());
+    }
 }
