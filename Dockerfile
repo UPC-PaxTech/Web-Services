@@ -1,5 +1,14 @@
-FROM openjdk:24-jdk
-VOLUME /tmp
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn -DskipTests package
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
+ENV PORT=8080
 EXPOSE 8080
-COPY target/platform-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -jar /app.jar
+
+ENTRYPOINT ["sh","-c","java -Dserver.port=${PORT} -jar app.jar"]
