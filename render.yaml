@@ -1,0 +1,40 @@
+envVarGroups:
+  - name: paxtech-mysql-env
+    envVars:
+      - key: MYSQL_DATABASE
+        value: paxtech_db
+      - key: MYSQL_USER
+        value: paxtech_user
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+
+services:
+  # 1) MySQL (privado)
+  - type: pserv
+    name: paxtech-mysql
+    runtime: docker
+    plan: starter
+    region: oregon
+    rootDir: mysql
+    envVars:
+      - fromGroup: paxtech-mysql-env
+    disk:
+      name: mysql-disk
+      mountPath: /var/lib/mysql
+      sizeGB: 10
+
+  # 2) Backend (público)
+  - type: web
+    name: paxtech-api
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    envVars:
+      - fromGroup: paxtech-mysql-env
+      - key: MYSQL_HOST
+        value: paxtech-mysql
+      - key: MYSQL_PORT
+        value: "3306"
